@@ -65,3 +65,41 @@ withTrxAndCommit {
   } withNativeQuery (QueryId("DistancePointFromTextToLocID"), postGISPoint, user.getUsersLocation.getId)
 }
 </pre>
+
+h1. REST examples (more complex)
+
+<pre>
+ @PUT
+ @Path("UserInfo/{uid}")
+ def updateUserInfo(@PathParam("uid") uid: String, eui: EUserInfo): EUserInfo = {
+   exceptionWrapper {
+     checkAccessRights {
+       withTrxAndCommit {
+         findAndApply(classOf[User], id(uid) ) {
+           u =>
+             val userInfoId = u.getUserInfo.getId
+             val newUserInfo: UserInfo = eui.getUserInfo
+             newUserInfo.setId(userInfoId)
+             merge[UserInfo](newUserInfo)
+         }
+       }
+     }
+   }
+ }
+</pre>
+
+<pre>
+@DELETE
+  @Path("{cofid}")
+  def deleteCofSimplePath(@PathParam("cofid") cofid: String): Unit = {
+    exceptionWrapper {
+      checkAccessRights {
+        withTrxAndCommit {
+          findAndApply(classOf[CircleOfFriends], id(cofid) ) {
+            cof => remove(cof)
+          }
+        }
+      }
+    }
+  }
+</pre>
