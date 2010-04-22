@@ -1,0 +1,67 @@
+h1. The Idea
+
+Based on 
+* "this idea":http://blog.fakod.eu/?p=557
+* "JDBCluster":http://jdbcluster.sourceforge.net and
+* "JSR 317: JavaTM Persistence 2.0":http://jcp.org/en/jsr/detail?id=317 (JPA 2.0)
+
+The JPA Extension should support
+* external query strings (in a separate XML file) 
+* type safe query parameter through special Filter Classes (-> "JDBCluster:CCFilter":http://fakod.eu/wiki/index.php?title=JDBCluster#Query_Support_by_CCFilter)
+* "Acegi":http://www.acegisecurity.org/ integration
+* Domain value check (-> "JDBCluster: Domains":http://fakod.eu/wiki/index.php?title=JDBCluster#Domains_for_Attributes) using "Bean Validation":http://www.jcp.org/en/jsr/detail?id=303
+* all this provided as Scala library
+
+
+h1. defines query strings
+
+A XML file collects all the used XML statements.
+
+<pre>
+<filter>
+  <query id="UserFromName" jpql="select u from User u where u.name like ?1"/>
+  <query id="DistancePointFromTextToLocID" jpql="select distance(pointfromtext(?1),lp.geometry) from location_point as lp where lp.loc_id=?2"/>
+</filter>
+</pre>
+
+h1. example using a query with one expected result and no transaction
+
+<pre>
+withNoTrx {
+  val user: User = oneResultQuery withQuery (QueryId("UserFromName"), "Lionel")
+  user
+}
+</pre>
+
+h1. iterating over query results
+
+<pre>
+withNoTrx {
+ forQueryResults {
+  u: User =>
+   userIDs.add(u.getId)
+   userNames.add(u.getName)
+ } withQuery (QueryId("UserFromName"), "%" + name + "%")
+}
+</pre>
+
+h1. find one entity, remove it and commit the transaction
+
+<pre>
+withTrxAndCommit {
+ findAndApply(classOf[User], id ) {
+  u => remove(u)
+ }
+}
+</pre>
+
+h1. execute a native SQL query and expect one result
+
+<pre>
+withTrxAndCommit {
+ oneResultQueryAndApply {
+  d: Double =>
+   eStatRet.setDistance(d)
+  } withNativeQuery (QueryId("DistancePointFromTextToLocID"), postGISPoint, user.getUsersLocation.getId)
+}
+</pre>

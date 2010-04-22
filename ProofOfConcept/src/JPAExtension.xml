@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2010 FaKod resp. LinesOfCode. This is not free software
+  -->
+
+<jpaextension xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="JPAExtension.xsd">
+
+    <jpqlsnippets>
+        <snippet id="nnaammee1" jpql="NAME=:UNITNAME"/>
+        <snippet id="nnaammee2" jpql="NAME=:NAME"/>
+        <snippet id="nnaammee3" jpql="NAME=:UNIT"/>
+    </jpqlsnippets>
+
+
+    <!-- Definition of available Query Objects-->
+    <filter>
+        <query id="UserFromName"
+               jpql="select u from User u where u.name like ?1"/>
+
+        <query id="FindUserFromName"
+               jpql="select u from User u where u.name like ?1"/>
+
+        <query id="DistancePointFromTextToLocID"
+               jpql="select distance(pointfromtext(?1),lp.geometry) from location_point as lp where lp.loc_id=?2"/>
+
+        <query id="AzimuthPointFromTextToLocID"
+               jpql="select azimuth(pointfromtext(?1),lp.geometry) from location_point as lp where lp.loc_id=?2"/>
+
+        <query id="CofFromUserId"
+               jpql="select cof from CircleOfFriends cof where cof.ownerOfThisCircleOfFriends.id=?1"/>
+
+        <query id="LocTagFromUserId"
+               jpql="select lt from LocationTag lt where lt.userOwningThislocationTag.id=?1"/>
+
+        <query id="LocTagFromCofId"
+               jpql="select lt from LocationTag lt, User u, CircleOfFriends cof inner join cof.friends f where cof.id=?1 AND u.id=f.id AND lt.userOwningThislocationTag.id=u.id"/>
+    </filter>
+
+</jpaextension>
