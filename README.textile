@@ -12,8 +12,9 @@ The JPA Extension should support
 * Domain value check (-> "JDBCluster: Domains":http://fakod.eu/wiki/index.php?title=JDBCluster#Domains_for_Attributes) using "Bean Validation":http://www.jcp.org/en/jsr/detail?id=303
 * all this provided as Scala library
 
+h1. Queries and Transactions
 
-h1. defines query strings
+h2. define query strings
 
 A XML file collects all the used XML statements.
 
@@ -24,7 +25,7 @@ A XML file collects all the used XML statements.
 </filter>
 </pre>
 
-h1. example using a query with one expected result and no transaction
+h2. example using a query with one expected result and no transaction
 
 <pre>
 withNoTrx {
@@ -33,7 +34,7 @@ withNoTrx {
 }
 </pre>
 
-h1. iterating over query results
+h2. iterating over query results
 
 <pre>
 withNoTrx {
@@ -45,7 +46,7 @@ withNoTrx {
 }
 </pre>
 
-h1. find one entity, remove it and commit the transaction
+h2. find one entity, remove it and commit the transaction
 
 <pre>
 withTrxAndCommit {
@@ -66,7 +67,10 @@ withTrxAndCommit {
 }
 </pre>
 
-h1. REST examples (more complex)
+h2. REST examples
+
+These examples are using a JAX-RS standard implementation from SUN called Jersey.
+_exceptionWrapper_ and _checkAccessRights_ are used to generate WebApplicationExceptions and to check the access rights based on HTTP-session credentials.
 
 <pre>
  @PUT
@@ -88,18 +92,31 @@ h1. REST examples (more complex)
  }
 </pre>
 
+h1. Filter Usage Examples
+
+h2. Defining Filter (query) Object and Query
+
+The XML snippet defines that _com.jpaextension.test.data.SomeFilter_ will contain the binding parameter _NT_ and _CID_ for query _MyOIQuery_.
+
 <pre>
-@DELETE
-  @Path("{cofid}")
-  def deleteCofSimplePath(@PathParam("cofid") cofid: String): Unit = {
-    exceptionWrapper {
-      checkAccessRights {
-        withTrxAndCommit {
-          findAndApply(classOf[CircleOfFriends], id(cofid) ) {
-            cof => remove(cof)
-          }
-        }
-      }
-    }
-  }
+<query id="MyOIQuery" alias="oi" jpql="oi.creatorId=:CID and oi.nameTxt=:NT">
+    <filterClass class="com.jpaextension.test.data.SomeFilter">
+        <binding var="CID" attribute="creatorId"/>
+        <binding var="NT" attribute="nameTxt"/>
+    </filterClass>
+</query>
+</pre>
+
+The following code creates a Filter Object _myFilter_, sets the binding parameter and executes the query.
+
+<pre>
+withNoTrx {
+	val myFilter: SomeFilter = newFilterInstance(QueryId("MyOIQuery"), classOf[ObjectItem])
+
+	myFilter.creatorId = BigInteger.valueOf(815)
+	myFilter.nameTxt = "Test1"
+
+	val result = createFilterQuery(myFilter).getResultList
+	result.size must_== 1
+}
 </pre>
