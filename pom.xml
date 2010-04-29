@@ -49,6 +49,11 @@
             <artifactId>postgresql</artifactId>
             <version>8.4-701.jdbc4</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+        </dependency>
     </dependencies>
 
     <!--

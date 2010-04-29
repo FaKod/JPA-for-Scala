@@ -19,6 +19,7 @@ package com.jpaextension.filter
 import javassist._
 import collection.mutable.HashMap
 import com.jpaextension.ReflectionUtil
+import java.net.URL
 
 
 /**
@@ -80,14 +81,17 @@ object FilterFactory {
   import FilterEnhancer._
   import ReflectionUtil._
 
-  private var path:String = null
+  private var path:URL = null
 
   /**
    * lazy init to support change of pah
    */
   lazy private val configuration = {
     path match {
-      case null => new FilterConfig("./JPAExtension.xml")
+      case null => {
+        val url = FilterFactory.getClass.getClassLoader.getResource("META-INF/JPAExtension.xml")
+        new FilterConfig(url)
+      }
       case _ => new FilterConfig(path)
     }
   }
@@ -95,7 +99,7 @@ object FilterFactory {
   /**
    * setting path
    */
-  def setPath(p:String) = path=p
+  def setPath(p:URL) = path=p
 
   /**
    *  returns new filter object instance

@@ -8,17 +8,17 @@ import java.math.BigInteger
  * Time: 13:33:15
  */
 
-class Test1 {
+class Filter1 {
   private var test2: Int = _
   var test3: Int = _
   var test4: Int = _
 }
-class Test2 {
+class Filter2 {
   var test3: Int = _
   var test4: Int = _
   var test5: Int = _
 }
-class Test3 {
+class Filter3 {
   var test: Int = _
   private var test2: Int = _
   var test5: Int = _

@@ -10,10 +10,10 @@ import data.{SomeJavaTestFilter, SomeFilter}
 import com.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 import com.jpaextension.filter.QueryId
-import org.specs.Specification
 import com.jpaextension.manager.UsesEntityManager
+import org.specs.{SpecificationWithJUnit}
 
-class DbTest extends Specification with UsesEntityManager {
+class DbTest extends SpecificationWithJUnit with UsesEntityManager {
   "JPAExtension" should {
 
     "return D all and C one OI" in {

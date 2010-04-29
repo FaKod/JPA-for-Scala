@@ -20,7 +20,7 @@ import xml.XML
 import collection.mutable.HashMap
 import collection.mutable.Map
 import com.jpaextension.exception.FilterException
-
+import java.net.URL
 
 
 /**
@@ -53,7 +53,7 @@ class FilterClass(clazzc: Class[_], bindingc: Map[String, String]) {
 /**
  * filter configuration class reads configuration from settings.XML
  */
-class FilterConfig(file:String) {
+class FilterConfig(url:URL) {
 
   /**
    * holding read snippets
@@ -68,7 +68,7 @@ class FilterConfig(file:String) {
   init
 
   private def init = {
-    val settings = XML.loadFile(file)
+    val settings = XML.load(url)
 
     /**
      *  create snippet map

@@ -3,7 +3,7 @@ package com.jpaextension.test
 import data._
 import com.jpaextension.filter.FilterFactory._
 import com.jpaextension.filter.{QueryId, FilterConfig}
-import org.specs.{Specification, SpecificationWithJUnit}
+import org.specs.{SpecificationWithJUnit}
 
 /**
  * User: FaKod
@@ -11,23 +11,24 @@ import org.specs.{Specification, SpecificationWithJUnit}
  * Time: 14:18:15
  */
 
-object FilterTest extends Specification {
+class FilterTest extends SpecificationWithJUnit {
   
   "A Filter" should {
 
     "fill Maps" in {
-      val conf = new FilterConfig("JPAExtension.xml")
+      val url = classOf[FilterTest].getClassLoader.getResource("META-INF/JPAExtension.xml")
+      val conf = new FilterConfig(url)
       println("SnippetMap: " + conf.getSnippetMap)
       println("QueryMap: " + conf.getQueryMap)
     }
 
     "enhance the Filter objects" in {
 
-      val f1: Test1 = newFilterInstance(QueryId("query1"), null)
-      val f2: Test2 = newFilterInstance(QueryId("query2"), null)
-      val f3: Test3 = newFilterInstance(QueryId("query3"), null)
-      val f4: Test1 = newFilterInstance(QueryId("query4"), null)
-      val f5: Test2 = newFilterInstance(QueryId("query5"), null)
+      val f1: Filter1 = newFilterInstance(QueryId("query1"), null)
+      val f2: Filter2 = newFilterInstance(QueryId("query2"), null)
+      val f3: Filter3 = newFilterInstance(QueryId("query3"), null)
+      val f4: Filter1 = newFilterInstance(QueryId("query4"), null)
+      val f5: Filter2 = newFilterInstance(QueryId("query5"), null)
 
       val f1s = getQueryId(f1)
       val f2s = getQueryId(f2)

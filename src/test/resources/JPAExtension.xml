@@ -13,28 +13,28 @@
         <!--special filter "name" for cluster CAuto is available-->
         <!--select: ...where NAME=test.testfilter.NameFilter.getName()-->
         <query id="query1" jpql="|nnaammee|" annotation="anno1 anno2 anno3 anno4 anno5">
-            <filterClass class="com.jpaextension.test.data.Test1">
+            <filterClass class="com.jpaextension.test.data.Filter1">
                 <binding var="UNITNAME" attribute="name"/>
             </filterClass>
         </query>
         <!--select for coordinates-->
         <query id="query2" alias="car" jpql="LATITUDE=:LAT and LONGITUDE=:LONG" annotation="anno6 anno7">
-            <filterClass class="com.jpaextension.test.data.Test2">
+            <filterClass class="com.jpaextension.test.data.Filter2">
                 <binding var="LONG" attribute="longitude"/>
                 <binding var="LAT" attribute="latitude"/>
             </filterClass>
         </query>
         <!--select only for LATITUDE-->
         <query id="query3" jpql="LATITUDE=:LATONLY">
-            <filterClass class="com.jpaextension.test.data.Test3">
+            <filterClass class="com.jpaextension.test.data.Filter3">
                 <binding var="LATONLY" attribute="latitude"/>
             </filterClass>
         </query>
         <query id="query4">
-            <filterClass class="com.jpaextension.test.data.Test1"/>
+            <filterClass class="com.jpaextension.test.data.Filter1"/>
         </query>
         <query id="query5" alias="c">
-            <filterClass class="com.jpaextension.test.data.Test2"/>
+            <filterClass class="com.jpaextension.test.data.Filter2"/>
             <fetch property="besitzer"/>
             <fetch property="sparePart" joinType="left"/>
         </query>
