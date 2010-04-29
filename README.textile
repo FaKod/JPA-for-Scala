@@ -16,7 +16,11 @@ h1. Queries and Transactions
 
 h2. define query strings
 
-A XML file collects all the used XML statements.
+A XML file collects all the used HQL statements. 
+Current Scala persistence implementations are trying to provide type safe SQL/HQL statements as classes and objects. I don't think that this is the best way.
+* SQL/HQL syntax is quite complex. IMHO it will not be possible to rewrite the whole functionality
+* I have learned that it can make sense to change a SQL/HQL statement in production (add redundancy etc.)
+* type safe binding parameter are more important
 
 <pre>
 <filter>
