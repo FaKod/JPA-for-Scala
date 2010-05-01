@@ -50,6 +50,14 @@
                 <binding var="NT" attribute="nameTxt"/>
             </filterClass>
         </query>
+        <query id="FindObjectItemFromName"
+               jpql="select oi from ObjectItem oi where oi.nameTxt like ?1"/>
+
+        <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt like :N">
+            <filterClass class="com.jpaextension.test.NameFilter">
+                <binding var="N" attribute="name"/>
+            </filterClass>
+        </query>
     </filter>
 
 </jpaextension>

@@ -26,7 +26,26 @@ Current Scala persistence implementations are trying to provide type safe SQL/HQ
 <filter>
   <query id="UserFromName" jpql="select u from User u where u.name like ?1"/>
   <query id="DistancePointFromTextToLocID" jpql="select distance(pointfromtext(?1),lp.geometry) from location_point as lp where lp.loc_id=?2"/>
+  <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt like :N">
+    <filterClass class="com.jpaextension.test.NameFilter">
+      <binding var="N" attribute="name"/>
+    </filterClass>
+  </query>
 </filter>
+</pre>
+
+h2. Execute Query with Filter Class
+
+<pre>
+val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
+filter.name = "%Test%"
+
+var i = 0
+forQueryResults {
+  oi: ObjectItem =>
+    i = i + 1
+} withQuery (filter)
+i must_== 1
 </pre>
 
 h2. example using a query with one expected result and no transaction

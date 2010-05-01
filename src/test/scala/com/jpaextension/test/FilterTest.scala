@@ -19,7 +19,10 @@ class FilterTest extends SpecificationWithJUnit {
       val url = classOf[FilterTest].getClassLoader.getResource("META-INF/JPAExtension.xml")
       val conf = new FilterConfig(url)
       println("SnippetMap: " + conf.getSnippetMap)
+      conf.getSnippetMap.size must_== 3
+
       println("QueryMap: " + conf.getQueryMap)
+      conf.getQueryMap.size must_== 9
     }
 
     "enhance the Filter objects" in {

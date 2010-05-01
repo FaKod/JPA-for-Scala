@@ -22,6 +22,7 @@ import collection.mutable.Buffer
 import collection.JavaConversions
 import com.jpaextension.filter.{FilterFactory, QueryId}
 import com.jpaextension.ReflectionUtil
+import com.jpaextension.filter.FilterFactory._
 
 /**
  * Thread Local Wrapper
@@ -76,7 +77,7 @@ trait EntityManagerWrapper {
   /**
    * creates query using filter object
    */
-  def createFilterQuery(filter:AnyRef) = {
+  def createFilterQuery(filter: AnyRef) = {
     val queryId = FilterFactory.getQueryId(filter)
     val entityName = FilterFactory.getEntityName(filter)
 
@@ -94,9 +95,10 @@ trait EntityManagerWrapper {
 
     val jPAQuery = createQuery(queryText)
 
-    query.filterClass.binding.keySet.foreach { key =>
-      val value = query.filterClass.binding.get(key).get
-      jPAQuery.setParameter(key, getFilterPropertyField(filter, value))
+    query.filterClass.binding.keySet.foreach {
+      key =>
+        val value = query.filterClass.binding.get(key).get
+        jPAQuery.setParameter(key, getFilterPropertyField(filter, value))
     }
 
     jPAQuery
@@ -147,12 +149,12 @@ trait UsesEntityManager extends EntityManagerWrapper {
 
     // no nested transactions
     var trxStartedHere = !em.getTransaction.isActive
-    if(trxStartedHere)
+    if (trxStartedHere)
       em.getTransaction.begin
 
     try {
       val ret = f
-      if(trxStartedHere)
+      if (trxStartedHere)
         em.getTransaction.commit
       ret
     }
@@ -176,7 +178,7 @@ trait UsesEntityManager extends EntityManagerWrapper {
 
     // no nested transactions
     var trxStartedHere = !em.getTransaction.isActive
-    if(trxStartedHere)
+    if (trxStartedHere)
       em.getTransaction.begin
 
     val ret =
@@ -185,7 +187,7 @@ trait UsesEntityManager extends EntityManagerWrapper {
     }
     finally {
       try {
-        if(trxStartedHere)
+        if (trxStartedHere)
           em.getTransaction.rollback
       }
       catch {
@@ -245,7 +247,7 @@ trait QueryHelper {
   protected def forQueryResults[T](body: (T) => Unit): DoWithForQuery[T] =
     new DoWithForQuery[T](body)
 
-  
+
   /**
    * see oneResultQuery
    */
@@ -255,7 +257,7 @@ trait QueryHelper {
      * filling parameter and calling fillParamAndExec on query
      */
     import JavaConversions._
-    protected def fillParamAndExec[T](q: Query, param: AnyRef*):Buffer[T] = {
+    protected def fillParamAndExec[T](q: Query, param: AnyRef*): Buffer[T] = {
       var i: Int = 1
       param.foreach {
         x =>
@@ -305,6 +307,18 @@ trait QueryHelper {
      */
     def withNativeQuery(query: QueryId, param: AnyRef*): A =
       withNativeQuery(FilterFactory.getJPQL(query), param: _*)
+
+    /**
+     * doing Query from Filter Object
+     */
+    import JavaConversions._
+    def withQuery(filter: AnyRef): A = {
+      val q = createFilterQuery(filter)
+      val res = q.getResultList.asInstanceOf[java.util.List[T]]
+      if (res.isEmpty)
+        throw new JPAExtensionException("Filter with Query: " + getQueryId(filter) + " has no results")
+      body(res.head)
+    }
   }
 
 
@@ -330,5 +344,17 @@ trait QueryHelper {
      */
     def withQuery(query: QueryId, param: AnyRef*): Unit =
       withQuery(FilterFactory.getJPQL(query), param: _*)
+
+    /**
+     * doing Query from Filter Object
+     */
+    import JavaConversions._
+    def withQuery(filter: AnyRef): Unit = {
+      val q = createFilterQuery(filter)
+      val res = q.getResultList.asInstanceOf[java.util.List[T]]
+      res.foreach {
+        x => body(x)
+      }
+    }
   }
 }

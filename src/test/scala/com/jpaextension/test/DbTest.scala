@@ -61,7 +61,62 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager {
         val result = createFilterQuery(MyFilter).getResultList
         result.size must_== 1
       }
+    }
 
+    "use Transactiokn and Commit" in {
+
+      val created: ObjectItem = withTrxAndCommit {
+        createQuery("Delete from ObjectItem") executeUpdate
+
+        val item = new ObjectItem()
+        item.setNameTxt("Test1")
+        item.setObjItemCatCode("NKN")
+        item.setUpdateSeqNr(1)
+        item.setCreatorId(BigInteger.valueOf(815))
+        persist(item)
+        item
+      }
+
+      withNoTrx {
+        val result = createQuery("Select oi from ObjectItem oi").getResultList
+        result.size must_== 1
+        val resItem = result.get(0).asInstanceOf[ObjectItem]
+        resItem.getId must_== created.getId
+      }
+    }
+
+    "use Transaction and Rollback" in {
+
+      withTrxAndCommit {
+        createQuery("Delete from ObjectItem") executeUpdate
+      }
+
+      val created: ObjectItem = withTrxAndRollback {
+        val item = new ObjectItem()
+        item.setNameTxt("Test1")
+        item.setObjItemCatCode("NKN")
+        item.setUpdateSeqNr(1)
+        item.setCreatorId(BigInteger.valueOf(815))
+        persist(item)
+        item
+      }
+
+      withNoTrx {
+        val result = createQuery("Select oi from ObjectItem oi").getResultList
+        result.size must_== 0
+      }
+    }
+
+    "use no Transaction" in {
+
+      withNoTrx {
+        val item = new ObjectItem()
+        item.setNameTxt("Test1")
+        item.setObjItemCatCode("NKN")
+        item.setUpdateSeqNr(1)
+        item.setCreatorId(BigInteger.valueOf(815))
+        persist(item)
+      }
     }
   }
 

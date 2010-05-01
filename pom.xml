@@ -110,6 +110,9 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+            <snapshots>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
         </repository>
         <repository>
             <id>EclipseLink Repo</id>
