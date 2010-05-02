@@ -36,7 +36,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
       for (i <- 1 to 20) {
         val item = findSimple(classOf[ObjectItem], BigInteger.valueOf(i))
         println("Loading Object Item: " + i)
-        item.getId must_== i
+        item.getId.intValue must_== i
       }
     }
 
@@ -73,7 +73,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
         oi: ObjectItem =>
           i = i + 1
       } withQuery (QueryId("FindObjectItemFromName"), "%Test%")
-      i must_== 1
+      i must_== 20
     }
   }
 }

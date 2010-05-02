@@ -45,7 +45,7 @@ forQueryResults {
   oi: ObjectItem =>
     i = i + 1
 } withQuery (filter)
-i must_== 1
+i must_== 10
 </pre>
 
 h2. example using a query with one expected result and no transaction

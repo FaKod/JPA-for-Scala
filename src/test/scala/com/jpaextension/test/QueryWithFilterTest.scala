@@ -38,12 +38,22 @@ class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager 
 
       val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
       filter.name = "%Test%"
+      
+      val filter2: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
+      filter2.name = "%Test:%"
 
-      var i = 0
+      var i:Int = 0
       forQueryResults {
         oi: ObjectItem =>
           i = i + 1
       } withQuery (filter)
+      i must_== 20
+
+      i = 0
+      forQueryResults {
+        oi: ObjectItem =>
+          i = i + 1
+      } withQuery (filter2)
       i must_== 20
     }
   }

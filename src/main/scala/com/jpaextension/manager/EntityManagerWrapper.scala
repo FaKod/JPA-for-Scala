@@ -3,6 +3,7 @@ package com.jpaextension.manager
 import com.jpaextension.ReflectionUtil
 import com.jpaextension.filter.{FilterFactory, QueryId}
 import javax.persistence.{EntityTransaction, EntityManager, Query}
+import FilterFactory._
 
 /**
  * User: FaKod
@@ -43,10 +44,10 @@ trait EntityManagerWrapper {
    * creates query using filter object
    */
   def createFilterQuery(filter: AnyRef) = {
-    val queryId = FilterFactory.getQueryId(filter)
-    val entityName = FilterFactory.getEntityName(filter)
+    val queryId = getQueryId(filter)
+    val entityName = getEntityName(filter)
 
-    val query = FilterFactory.getQueryInstance(queryId)
+    val query = getQueryInstance(queryId)
 
     //@TODO generate HQL query with all possibilities
     val queryText = "select " +
