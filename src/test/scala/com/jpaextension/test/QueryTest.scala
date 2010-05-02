@@ -5,6 +5,7 @@ import com.jpaextension.manager.{QueryHelper, UsesEntityManager}
 import com.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 import com.jpaextension.filter.QueryId
+import collection.mutable.Queue
 
 /**
  * User: FaKod
@@ -17,6 +18,9 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
 
     setSequential()
 
+    shareVariables()
+    var ids = new Queue[BigInteger]()
+
     "create Object Items" in {
       withTrxAndCommit {
         createQuery("Delete from ObjectItem") executeUpdate
@@ -28,34 +32,36 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
           item.setUpdateSeqNr(i)
           item.setCreatorId(BigInteger.valueOf(i))
           persist(item)
+          ids.enqueue(item.getId)
         }
       }
     }
 
     "find an entity" in {
-      for (i <- 1 to 20) {
-        val item = findSimple(classOf[ObjectItem], BigInteger.valueOf(i))
-        println("Loading Object Item: " + i)
-        item.getId.intValue must_== i
+      ids.foreach {
+        id =>
+        val item = findSimple(classOf[ObjectItem], id)
+        item.getId must_== id
       }
     }
 
     "find an entity and apply" in {
-      for (t <- 1 to 20) {
-        findAndApply(classOf[ObjectItem], BigInteger.valueOf(t)) {
+      ids.foreach {
+        id =>
+        findAndApply(classOf[ObjectItem], id) {
           oi: ObjectItem =>
-            oi.getId must_== t
+            oi.getId must_== id
         }
       }
     }
 
     "execute a one/first-only-result native query" in {
-      var i = 0
+      var i:Long = 0
       oneResultQueryAndApply {
-        oi: ObjectItem =>
-          i = i + 1
-      } withNativeQuery ("select oi from obj_item oi where oi.name_txt like ?1", "%Test%")
-      i must_== 1
+        count: Long =>
+          i = count
+      } withNativeQuery ("select count(*) from obj_item oi where oi.name_txt like ?1", "%Test%")
+      i must_== 20
     }
 
     "execute a one/first-only-result QueryId query" in {
