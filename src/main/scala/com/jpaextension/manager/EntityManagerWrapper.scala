@@ -44,27 +44,47 @@ trait EntityManagerWrapper {
    * creates query using filter object
    */
   def createFilterQuery(filter: AnyRef) = {
-    val queryId = getQueryId(filter)
+
     val entityName = getEntityName(filter)
+    val query = getQueryInstance(getQueryId(filter))
 
-    val query = getQueryInstance(queryId)
+    var jPAQuery: Query = null
 
-    //@TODO generate HQL query with all possibilities
-    val queryText = "select " +
-            query.alias +
-            " from " +
-            entityName + " " +
-            query.alias + " " +
-            " where (" +
-            query.jpql +
-            ")"
+    val alias = query.alias
+    val where = query.jpql
 
-    val jPAQuery = createQuery(queryText)
+    var qStr: StringBuilder = new StringBuilder(alias)
 
-    query.filterClass.binding.keySet.foreach {
-      key =>
-        val value = query.filterClass.binding.get(key).get
-        jPAQuery.setParameter(key, getFilterPropertyField(filter, value))
+    // @TODO add fetch statements
+    // queryString.append(query.fetch)
+
+    var ext = query.ext
+    if (ext != null && ext.length() > 0)
+      qStr.append(", ").append(ext)
+
+    var select: String = ""
+    if (alias != null && alias.length() > 0)
+      select = "select " + alias + " "
+
+    var orderBy = query.orderby
+    if (orderBy != null && orderBy.length() > 0)
+      orderBy = " order by " + orderBy
+
+    if (where != null && where.length() > 0) {
+      val queryString = select + " from " + entityName + " " + qStr + " " + " where " + where + orderBy
+
+      jPAQuery = createQuery(queryString)
+
+      query.filterClass.binding.keySet.foreach {
+        key =>
+          val value = query.filterClass.binding.get(key).get
+          jPAQuery.setParameter(key, getFilterPropertyField(filter, value))
+      }
+
+    } else {
+      val queryString = " from " + entityName + " " + qStr + " " + orderBy;
+
+      jPAQuery = createQuery(queryString)
     }
 
     jPAQuery
