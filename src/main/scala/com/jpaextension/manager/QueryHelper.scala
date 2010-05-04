@@ -272,4 +272,12 @@ trait QueryHelper {
 
     jPAQuery
   }
+
+  /**
+   * returns a List of query annotations
+   */
+  def getFilterAnnotations(filter:AnyRef) = {
+    val query = getQueryInstance(getQueryId(filter))
+    query.annotation
+  }
 }

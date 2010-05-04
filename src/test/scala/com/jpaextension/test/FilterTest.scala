@@ -4,6 +4,7 @@ import data._
 import com.jpaextension.filter.FilterFactory._
 import com.jpaextension.filter.{QueryId, FilterConfig}
 import org.specs.{SpecificationWithJUnit}
+import com.jpaextension.manager.{UsesEntityManager, QueryHelper}
 
 /**
  * User: FaKod
@@ -11,8 +12,7 @@ import org.specs.{SpecificationWithJUnit}
  * Time: 14:18:15
  */
 
-class FilterTest extends SpecificationWithJUnit {
-  
+class FilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper {
   "A Filter" should {
 
     "fill Maps" in {
@@ -40,6 +40,14 @@ class FilterTest extends SpecificationWithJUnit {
       val f5s = getQueryId(f5)
 
       (f1s + f2s + f3s + f4s + f5s) must_== ("query1query2query3query4query5")
+    }
+
+    "return annotations" in {
+      val f: Filter1 = newFilterInstance(QueryId("query1"), null)
+
+      val annoList = getFilterAnnotations(f)
+
+      annoList.size must_== 5
     }
   }
 }
