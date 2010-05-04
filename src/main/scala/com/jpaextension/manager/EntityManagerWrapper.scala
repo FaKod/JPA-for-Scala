@@ -4,6 +4,8 @@ import com.jpaextension.ReflectionUtil
 import com.jpaextension.filter.{FilterFactory, QueryId}
 import javax.persistence.{EntityTransaction, EntityManager, Query}
 import FilterFactory._
+import java.util.regex.Pattern
+import com.jpaextension.exception.JPAExtensionException
 
 /**
  * User: FaKod
@@ -45,13 +47,38 @@ trait EntityManagerWrapper {
    */
   def createFilterQuery(filter: AnyRef) = {
 
-    val entityName = getEntityName(filter)
     val query = getQueryInstance(getQueryId(filter))
+
+    /**
+     * replace all hql snippets with syntax |snippetId|
+     */
+    def replaceSnippets(jpql: String): String = {
+
+      val environment_pattern = Pattern.compile("\\|[^\\|]*\\|", Pattern.UNICODE_CASE)
+      val environment_matcher = environment_pattern.matcher(jpql)
+
+      val sb = new StringBuffer
+
+      while (environment_matcher.find) {
+        val temp = environment_matcher.group
+        val sId = temp.substring(1, temp.length() - 1)
+
+        val snippet = getSnippetInstance(sId)
+
+        environment_matcher.appendReplacement(sb, snippet)
+      }
+
+      val buffer = environment_matcher.appendTail(sb)
+      buffer.toString()
+    }
+
+    
+    val entityName = getEntityName(filter)
 
     var jPAQuery: Query = null
 
     val alias = query.alias
-    val where = query.jpql
+    val where = replaceSnippets(query.jpql)
 
     var qStr: StringBuilder = new StringBuilder(alias)
 

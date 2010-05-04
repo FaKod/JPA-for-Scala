@@ -2,7 +2,7 @@
 <jpaextension xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="JPAExtension.xsd">
 
     <jpqlsnippets>
-        <snippet id="nnaammee1" jpql="NAME=:UNITNAME"/>
+        <snippet id="MY_LIKE_SNIPPET" jpql="like"/>
         <snippet id="nnaammee2" jpql="NAME=:NAME"/>
         <snippet id="nnaammee3" jpql="NAME=:UNIT"/>
     </jpqlsnippets>
@@ -53,7 +53,7 @@
         <query id="FindObjectItemFromName"
                jpql="select oi from ObjectItem oi where oi.nameTxt like ?1"/>
 
-        <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt like :N">
+        <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt |MY_LIKE_SNIPPET| :N" orderby="oi.nameTxt">
             <filterClass class="com.jpaextension.test.NameFilter">
                 <binding var="N" attribute="name"/>
             </filterClass>

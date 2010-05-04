@@ -148,4 +148,9 @@ object FilterFactory {
    * return XML unmarshalled Query object
    */
   def getQueryInstance(queryId:String) = configuration.getQueryInstance(queryId)
+
+  /**
+   * returns the snippet instance for the given snippetId
+   */
+  def getSnippetInstance(snippetId:String) = configuration.getSnippetInstance(snippetId)
 }
