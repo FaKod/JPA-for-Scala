@@ -5,7 +5,6 @@ import com.jpaextension.filter.{FilterFactory, QueryId}
 import javax.persistence.{EntityTransaction, EntityManager, Query}
 import FilterFactory._
 import java.util.regex.Pattern
-import com.jpaextension.exception.JPAExtensionException
 
 /**
  * User: FaKod
@@ -61,7 +60,7 @@ trait EntityManagerWrapper {
 
       while (environment_matcher.find) {
         val temp = environment_matcher.group
-        val sId = temp.substring(1, temp.length() - 1)
+        val sId = temp.substring(1, temp.length - 1)
 
         val snippet = getSnippetInstance(sId)
 
@@ -69,10 +68,31 @@ trait EntityManagerWrapper {
       }
 
       val buffer = environment_matcher.appendTail(sb)
-      buffer.toString()
+      buffer.toString
     }
 
-    
+    /**
+     * creating join fetch statements
+     */
+    def getFetch: String = {
+
+      var alias = query.alias
+      if (alias == null || alias.length() == 0) {
+        alias = ""
+      } else {
+        alias = alias + "."
+      }
+      val builder = new StringBuilder
+
+      query.fetch.foreach {
+        p =>
+          val (property: String, jointype: String) = p
+          builder.append(' ').append(jointype).append(" join fetch ").append(alias).append(property)
+      }
+      return builder.toString
+    }
+
+
     val entityName = getEntityName(filter)
 
     var jPAQuery: Query = null
@@ -82,8 +102,9 @@ trait EntityManagerWrapper {
 
     var qStr: StringBuilder = new StringBuilder(alias)
 
-    // @TODO add fetch statements
-    // queryString.append(query.fetch)
+    val fetch = getFetch
+    if (fetch != null && fetch.length() > 0)
+      qStr.append(fetch)
 
     var ext = query.ext
     if (ext != null && ext.length() > 0)
