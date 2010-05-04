@@ -18,26 +18,31 @@ h2. define query strings
 
 A XML file collects all the used HQL statements. 
 Current Scala persistence implementations are trying to provide type safe SQL/HQL statements as classes and objects. I don't think that this is the best way.
-* SQL/HQL syntax is quite complex. IMHO it will not be possible to rewrite the whole functionality
-* I have learned that it can make sense to change a SQL/HQL statement in production (add redundancy etc.)
-* type safe binding parameter are more important
+
+* SQL/HQL syntax is quite complex. IMHO it will not be possible to rewrite the whole functionality (especially taking into account SQL enhancements like PostGIS or db vendor dialects)
+* I have learned that it can make sense to change a SQL/JPQL statement in production (add redundancy tables etc.)
+* Nevertheless, type safe SQL/JPQL parameter are important
+* JPA and JPA2.0 are widely adopted and used (field proven implementations) java standards
 
 h2. JPAExtension.xml example file
 
 <pre>
 <filter>
+  <!-- simple JPQL query with one parameter-->
   <query id="UserFromName" jpql="select u from User u where u.name like ?1"/>
 
+  <!-- simple native SQL query with two parameter-->
   <query id="DistancePointFromTextToLocID" jpql="select distance(pointfromtext(?1),lp.geometry) from location_point as lp where lp.loc_id=?2"/>
 
+  <!-- JPQL query with one parameter and filer class. Maps N to name -->
   <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt like :N">
     <filterClass class="com.jpaextension.test.NameFilter">
       <binding var="N" attribute="name"/>
     </filterClass>
   </query>
 
+  <!-- JPQL query with relation fetch statements and query annotations -->
   <query id="fetchFilter" alias="c" annotation="myAnno1 myAnno2">
-	<FilterClass class="test.testfilter.MyTestFilter"/>
 	<fetch property="owner"/>
 	<fetch property="sparePart" joinType="left"/>
   </query>	
@@ -47,7 +52,7 @@ h2. JPAExtension.xml example file
 h2. Execute Query with Filter Class
 
 The above defined query with the ID _FindObjectItemFromNameWithFilter_ can use the filter _NameFilter_ for holding the binding attribute _name_. _name_ will be used to replace _N_.
-Since the query can return more than one result _forQueryResults_ can be used to iterate over the results.
+Since the query can return more than one result _forQueryResults_ can be used to iterate over the result-set.
 
 <pre>
 val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
@@ -82,7 +87,7 @@ withNoTrx {
 }
 </pre>
 
-h2. iterating over query results
+h2. iterating over query results without transaction
 
 <pre>
 withNoTrx {
@@ -99,7 +104,7 @@ h2. find one entity, remove it and commit the transaction
 <pre>
 withTrxAndCommit {
  findAndApply(classOf[User], id ) {
-  u => remove(u)
+   u => remove(u)
  }
 }
 </pre>
