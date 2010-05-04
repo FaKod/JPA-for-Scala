@@ -22,19 +22,32 @@ Current Scala persistence implementations are trying to provide type safe SQL/HQ
 * I have learned that it can make sense to change a SQL/HQL statement in production (add redundancy etc.)
 * type safe binding parameter are more important
 
+h2. JPAExtension.xml example file
+
 <pre>
 <filter>
   <query id="UserFromName" jpql="select u from User u where u.name like ?1"/>
+
   <query id="DistancePointFromTextToLocID" jpql="select distance(pointfromtext(?1),lp.geometry) from location_point as lp where lp.loc_id=?2"/>
+
   <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt like :N">
     <filterClass class="com.jpaextension.test.NameFilter">
       <binding var="N" attribute="name"/>
     </filterClass>
   </query>
+
+  <query id="fetchFilter" alias="c" annotation="myAnno1 myAnno2">
+	<FilterClass class="test.testfilter.MyTestFilter"/>
+	<fetch property="owner"/>
+	<fetch property="sparePart" joinType="left"/>
+  </query>	
 </filter>
 </pre>
 
 h2. Execute Query with Filter Class
+
+The above defined query with the ID _FindObjectItemFromNameWithFilter_ can use the filter _NameFilter_ for holding the binding attribute _name_. _name_ will be used to replace _N_.
+Since the query can return more than one result _forQueryResults_ can be used to iterate over the results.
 
 <pre>
 val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
@@ -47,6 +60,18 @@ forQueryResults {
 } withQuery (filter)
 i must_== 10
 </pre>
+
+h2. fetch statement for preload relations
+
+The fetch tag allows the preload of (lazy) relations. In case of _fetchFilter_ the relations _owner_ and _sparePart_ are fetched while loading the data from DB.
+
+h2. annotations for the executed query
+
+For the design of persistence layers it is useful to provide some query annotations (as a list of simple text). _myAnno1_ is an example. Annotations can be retrieved using a filer object.
+
+h2. Query Snippets
+
+Sometimes several queries contain a common part. This can be put as a constant snippet to JPAExtension.xml.
 
 h2. example using a query with one expected result and no transaction
 
