@@ -1,10 +1,8 @@
 package com.jpaextension.manager
 
 import com.jpaextension.ReflectionUtil
-import com.jpaextension.filter.{FilterFactory, QueryId}
+import com.jpaextension.filter.{FilterFactory}
 import javax.persistence.{EntityTransaction, EntityManager, Query}
-import FilterFactory._
-import java.util.regex.Pattern
 
 /**
  * User: FaKod
@@ -17,8 +15,6 @@ import java.util.regex.Pattern
  */
 trait EntityManagerWrapper {
   val em: EntityManager
-
-  import ReflectionUtil._
 
   /**
    * persist wrapper
@@ -34,109 +30,6 @@ trait EntityManagerWrapper {
    * create Query wrapper
    */
   def createQuery(s: String): Query = em.createQuery(s)
-
-  /**
-   * creates new filter instance
-   */
-  def newFilterInstance[T](queryId: QueryId, entity: Class[_]) =
-    FilterFactory.newFilterInstance[T](queryId, entity)
-
-  /**
-   * creates query using filter object
-   */
-  def createFilterQuery(filter: AnyRef) = {
-
-    val query = getQueryInstance(getQueryId(filter))
-
-    /**
-     * replace all hql snippets with syntax |snippetId|
-     */
-    def replaceSnippets(jpql: String): String = {
-
-      val environment_pattern = Pattern.compile("\\|[^\\|]*\\|", Pattern.UNICODE_CASE)
-      val environment_matcher = environment_pattern.matcher(jpql)
-
-      val sb = new StringBuffer
-
-      while (environment_matcher.find) {
-        val temp = environment_matcher.group
-        val sId = temp.substring(1, temp.length - 1)
-
-        val snippet = getSnippetInstance(sId)
-
-        environment_matcher.appendReplacement(sb, snippet)
-      }
-
-      val buffer = environment_matcher.appendTail(sb)
-      buffer.toString
-    }
-
-    /**
-     * creating join fetch statements
-     */
-    def getFetch: String = {
-
-      var alias = query.alias
-      if (alias == null || alias.length() == 0) {
-        alias = ""
-      } else {
-        alias = alias + "."
-      }
-      val builder = new StringBuilder
-
-      query.fetch.foreach {
-        p =>
-          val (property: String, jointype: String) = p
-          builder.append(' ').append(jointype).append(" join fetch ").append(alias).append(property)
-      }
-      return builder.toString
-    }
-
-
-    val entityName = getEntityName(filter)
-
-    var jPAQuery: Query = null
-
-    val alias = query.alias
-    val where = replaceSnippets(query.jpql)
-
-    var qStr: StringBuilder = new StringBuilder(alias)
-
-    val fetch = getFetch
-    if (fetch != null && fetch.length() > 0)
-      qStr.append(fetch)
-
-    var ext = query.ext
-    if (ext != null && ext.length() > 0)
-      qStr.append(", ").append(ext)
-
-    var select: String = ""
-    if (alias != null && alias.length() > 0)
-      select = "select " + alias + " "
-
-    var orderBy = query.orderby
-    if (orderBy != null && orderBy.length() > 0)
-      orderBy = " order by " + orderBy
-
-    if (where != null && where.length() > 0) {
-      val queryString = select + " from " + entityName + " " + qStr + " " + " where " + where + orderBy
-
-      jPAQuery = createQuery(queryString)
-
-      query.filterClass.binding.keySet.foreach {
-        key =>
-          val value = query.filterClass.binding.get(key).get
-          jPAQuery.setParameter(key, getFilterPropertyField(filter, value))
-      }
-
-    } else {
-      val queryString = " from " + entityName + " " + qStr + " " + orderBy;
-
-      jPAQuery = createQuery(queryString)
-    }
-
-    jPAQuery
-  }
 
   /**
    * finds entity of class tClass by primary id o
