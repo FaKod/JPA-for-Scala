@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.jpaextension.filter
+package org.jpaextension.filter
 
 import xml.XML
 import collection.mutable.HashMap
 import collection.mutable.Map
-import com.jpaextension.exception.FilterException
+import org.jpaextension.exception.FilterException
 import java.net.URL
 
 

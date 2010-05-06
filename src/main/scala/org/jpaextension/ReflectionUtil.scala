@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jpaextension
+package org.jpaextension
 
 /**
  * class for reflecting Scala or Java classes

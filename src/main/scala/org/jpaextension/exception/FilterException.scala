@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jpaextension.exception
+package org.jpaextension.exception
 
 /**
  * Filter Exception thrown on filter errors

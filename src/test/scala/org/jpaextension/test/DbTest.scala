@@ -1,4 +1,4 @@
-package com.jpaextension.test
+package org.jpaextension.test
 
 /**
  * User: FaKod
@@ -7,11 +7,11 @@ package com.jpaextension.test
  */
 
 import data.{SomeJavaTestFilter, SomeFilter}
-import com.pf4mip.persistence.popo.ObjectItem
+import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
-import com.jpaextension.filter.QueryId
+import org.jpaextension.filter.QueryId
 import org.specs.{SpecificationWithJUnit}
-import com.jpaextension.manager.{QueryHelper, UsesEntityManager}
+import org.jpaextension.manager.{QueryHelper, UsesEntityManager}
 
 class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper {
   "JPAExtension" should {

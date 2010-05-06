@@ -1,13 +1,13 @@
-package com.jpaextension.manager
+package org.jpaextension.manager
 
-import com.jpaextension.exception.JPAExtensionException
-import com.jpaextension.filter.{FilterFactory, QueryId}
+import org.jpaextension.exception.JPAExtensionException
+import org.jpaextension.filter.{FilterFactory, QueryId}
 import collection.mutable.Buffer
 import javax.persistence.Query
 import collection.JavaConversions
 import FilterFactory._
 import java.util.regex.Pattern
-import com.jpaextension.ReflectionUtil
+import org.jpaextension.ReflectionUtil
 
 /**
  * User: FaKod

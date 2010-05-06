@@ -1,9 +1,9 @@
-package com.jpaextension.test
+package org.jpaextension.test
 
-import com.jpaextension.manager.{UsesEntityManager, QueryHelper}
+import org.jpaextension.manager.{UsesEntityManager, QueryHelper}
 import org.specs.SpecificationWithJUnit
-import com.jpaextension.filter.QueryId
-import com.pf4mip.persistence.popo.ObjectItem
+import org.jpaextension.filter.QueryId
+import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 
 /**

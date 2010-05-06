@@ -1,4 +1,4 @@
-package com.pf4mip.persistence.popo;
+package org.pf4mip.persistence.popo;
 
 import javax.persistence.*;
 import java.math.BigInteger;

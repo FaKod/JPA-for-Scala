@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
     <persistence-unit name="mip" transaction-type="RESOURCE_LOCAL">
-        <class>com.pf4mip.persistence.popo.ObjectItem</class>
+        <class>org.pf4mip.persistence.popo.ObjectItem</class>
         <properties>
             <!-- Default database login using Oracle for EclipseLink's internal connection pool,
                  change this to access your own database. -->

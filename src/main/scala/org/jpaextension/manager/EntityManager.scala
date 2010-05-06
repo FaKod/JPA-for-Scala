@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jpaextension.manager
+package org.jpaextension.manager
 
 import javax.persistence.{EntityManager, Persistence}
 

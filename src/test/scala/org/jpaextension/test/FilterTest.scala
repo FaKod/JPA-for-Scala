@@ -1,10 +1,10 @@
-package com.jpaextension.test
+package org.jpaextension.test
 
-import data._
-import com.jpaextension.filter.FilterFactory._
-import com.jpaextension.filter.{QueryId, FilterConfig}
+import org.jpaextension.filter.FilterFactory._
+import org.jpaextension.filter.{QueryId, FilterConfig}
 import org.specs.{SpecificationWithJUnit}
-import com.jpaextension.manager.{UsesEntityManager, QueryHelper}
+import org.jpaextension.manager.{UsesEntityManager, QueryHelper}
+import org.jpaextension.test.data.{Filter3, Filter2, Filter1}
 
 /**
  * User: FaKod

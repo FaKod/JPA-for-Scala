@@ -13,39 +13,39 @@
         <!--special filter "name" for cluster CAuto is available-->
         <!--select: ...where NAME=test.testfilter.NameFilter.getName()-->
         <query id="query1" jpql="|nnaammee|" annotation="anno1 anno2 anno3 anno4 anno5">
-            <filterClass class="com.jpaextension.test.data.Filter1">
+            <filterClass class="org.jpaextension.test.data.Filter1">
                 <binding var="UNITNAME" attribute="name"/>
             </filterClass>
         </query>
         <!--select for coordinates-->
         <query id="query2" alias="car" jpql="LATITUDE=:LAT and LONGITUDE=:LONG" annotation="anno6 anno7">
-            <filterClass class="com.jpaextension.test.data.Filter2">
+            <filterClass class="org.jpaextension.test.data.Filter2">
                 <binding var="LONG" attribute="longitude"/>
                 <binding var="LAT" attribute="latitude"/>
             </filterClass>
         </query>
         <!--select only for LATITUDE-->
         <query id="query3" jpql="LATITUDE=:LATONLY">
-            <filterClass class="com.jpaextension.test.data.Filter3">
+            <filterClass class="org.jpaextension.test.data.Filter3">
                 <binding var="LATONLY" attribute="latitude"/>
             </filterClass>
         </query>
         <query id="query4">
-            <filterClass class="com.jpaextension.test.data.Filter1"/>
+            <filterClass class="org.jpaextension.test.data.Filter1"/>
         </query>
         <query id="query5" alias="c">
-            <filterClass class="com.jpaextension.test.data.Filter2"/>
+            <filterClass class="org.jpaextension.test.data.Filter2"/>
             <fetch property="besitzer"/>
             <fetch property="sparePart" joinType="left"/>
         </query>
         <query id="MyOIQuery" alias="oi" jpql="oi.creatorId=:CID and oi.nameTxt=:NT" annotation="anno6 anno7">
-            <filterClass class="com.jpaextension.test.data.SomeFilter">
+            <filterClass class="org.jpaextension.test.data.SomeFilter">
                 <binding var="CID" attribute="creatorId"/>
                 <binding var="NT" attribute="nameTxt"/>
             </filterClass>
         </query>
         <query id="MyOIQuery2" alias="oi" jpql="oi.creatorId=:CID and oi.nameTxt=:NT" annotation="anno6 anno7">
-            <filterClass class="com.jpaextension.test.data.SomeJavaTestFilter">
+            <filterClass class="org.jpaextension.test.data.SomeJavaTestFilter">
                 <binding var="CID" attribute="creatorId"/>
                 <binding var="NT" attribute="nameTxt"/>
             </filterClass>
@@ -54,7 +54,7 @@
                jpql="select oi from ObjectItem oi where oi.nameTxt like ?1"/>
 
         <query id="FindObjectItemFromNameWithFilter" alias="oi" jpql="oi.nameTxt |MY_LIKE_SNIPPET| :N" orderby="oi.nameTxt">
-            <filterClass class="com.jpaextension.test.NameFilter">
+            <filterClass class="org.jpaextension.test.NameFilter">
                 <binding var="N" attribute="name"/>
             </filterClass>
         </query>

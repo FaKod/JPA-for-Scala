@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.jpaextension.filter
+package org.jpaextension.filter
 
 import javassist._
 import collection.mutable.HashMap
-import com.jpaextension.ReflectionUtil
+import org.jpaextension.ReflectionUtil
 import java.net.URL
 
 

@@ -1,4 +1,4 @@
-package com.jpaextension.test.data;
+package org.jpaextension.test.data;
 
 import java.math.BigInteger;
 

@@ -1,7 +1,7 @@
-package com.jpaextension.manager
+package org.jpaextension.manager
 
-import com.jpaextension.ReflectionUtil
-import com.jpaextension.filter.{FilterFactory}
+import org.jpaextension.ReflectionUtil
+import org.jpaextension.filter.{FilterFactory}
 import javax.persistence.{EntityTransaction, EntityManager, Query}
 
 /**
