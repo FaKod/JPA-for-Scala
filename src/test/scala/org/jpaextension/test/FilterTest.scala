@@ -3,8 +3,8 @@ package org.jpaextension.test
 import org.jpaextension.filter.FilterFactory._
 import org.jpaextension.filter.{QueryId, FilterConfig}
 import org.specs.{SpecificationWithJUnit}
-import org.jpaextension.manager.{UsesEntityManager, QueryHelper}
 import org.jpaextension.test.data.{Filter3, Filter2, Filter1}
+import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerMFactory, UsesEntityManager, QueryHelper}
 
 /**
  * User: FaKod
@@ -12,7 +12,9 @@ import org.jpaextension.test.data.{Filter3, Filter2, Filter1}
  * Time: 14:18:15
  */
 
-class FilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper {
+class FilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+  def getPersistenceUnitName = "mip"
+
   "A Filter" should {
 
     "fill Maps" in {

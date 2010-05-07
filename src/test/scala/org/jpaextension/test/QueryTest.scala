@@ -1,11 +1,11 @@
 package org.jpaextension.test
 
 import org.specs.SpecificationWithJUnit
-import org.jpaextension.manager.{QueryHelper, UsesEntityManager}
 import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 import org.jpaextension.filter.QueryId
 import collection.mutable.Queue
+import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerMFactory, QueryHelper, UsesEntityManager}
 
 /**
  * User: FaKod
@@ -13,7 +13,8 @@ import collection.mutable.Queue
  * Time: 20:36:06
  */
 
-class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper {
+class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+  def getPersistenceUnitName = "mip"
   "A Query" should {
 
     setSequential()
@@ -40,23 +41,23 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     "find an entity" in {
       ids.foreach {
         id =>
-        val item = findSimple(classOf[ObjectItem], id)
-        item.getId must_== id
+          val item = findSimple(classOf[ObjectItem], id)
+          item.getId must_== id
       }
     }
 
     "find an entity and apply" in {
       ids.foreach {
         id =>
-        findAndApply(classOf[ObjectItem], id) {
-          oi: ObjectItem =>
-            oi.getId must_== id
-        }
+          findAndApply(classOf[ObjectItem], id) {
+            oi: ObjectItem =>
+              oi.getId must_== id
+          }
       }
     }
 
     "execute a one/first-only-result native query" in {
-      var i:Long = 0
+      var i: Long = 0
       oneResultQueryAndApply {
         count: Long =>
           i = count

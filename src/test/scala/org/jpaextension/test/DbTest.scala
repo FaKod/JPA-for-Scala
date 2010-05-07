@@ -11,9 +11,13 @@ import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 import org.jpaextension.filter.QueryId
 import org.specs.{SpecificationWithJUnit}
-import org.jpaextension.manager.{QueryHelper, UsesEntityManager}
+import org.jpaextension.manager._
 
-class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper {
+
+class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+
+  def getPersistenceUnitName = "mip"
+
   "JPAExtension" should {
 
     "return D all and C one OI" in {
@@ -63,7 +67,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
       }
     }
 
-    "use Transactiokn and Commit" in {
+    "use Transaction and Commit" in {
 
       val created: ObjectItem = withTrxAndCommit {
         createQuery("Delete from ObjectItem") executeUpdate
@@ -78,9 +82,9 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
       }
 
       withNoTrx {
-        val result = createQuery("Select oi from ObjectItem oi").getResultList
+        val result = createQuery[ObjectItem]("Select oi from ObjectItem oi").getResultList
         result.size must_== 1
-        val resItem = result.get(0).asInstanceOf[ObjectItem]
+        val resItem = result.head
         resItem.getId must_== created.getId
       }
     }

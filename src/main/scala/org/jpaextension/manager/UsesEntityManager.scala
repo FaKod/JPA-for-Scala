@@ -16,33 +16,11 @@
 
 package org.jpaextension.manager
 
-import javax.persistence.{EntityManager, Persistence}
-
-/**
- * Thread Local Wrapper
- */
-class ScalaThreadLocal[T] extends ThreadLocal[Option[T]] {
-  override protected def initialValue: Option[T] = None
-}
-
-/**
- * Thread Local singleton wrapper for Entity Manager
- */
-object GetEntityManager {
-  private val s = new ScalaThreadLocal[EntityManager]()
-  private val emf = Persistence.createEntityManagerFactory("mip")
-
-  def apply() = s get match {
-    case Some(x) => x
-    case None => s set Option(emf.createEntityManager); s.get.get
-  }
-}
 
 /**
  * closures for Transaction management
  */
 trait UsesEntityManager extends EntityManagerWrapper {
-  val em = GetEntityManager()
 
   /**
    * creates transaction and executes a commit

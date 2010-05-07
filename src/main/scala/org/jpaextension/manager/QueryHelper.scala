@@ -3,8 +3,6 @@ package org.jpaextension.manager
 import org.jpaextension.exception.JPAExtensionException
 import org.jpaextension.filter.{FilterFactory, QueryId}
 import collection.mutable.Buffer
-import javax.persistence.Query
-import collection.JavaConversions
 import FilterFactory._
 import java.util.regex.Pattern
 import org.jpaextension.ReflectionUtil
@@ -26,8 +24,8 @@ trait QueryHelper {
    */
   protected def findAndApply[T, A](c: Class[T], id: AnyRef)(f: T => A): A = {
     find[T](c, id) match {
-      case null => throw new JPAExtensionException("Entity: " + c + " not found with parameter: " + id)
-      case u => {
+      case None => throw new JPAExtensionException("Entity: " + c + " not found with parameter: " + id)
+      case Some(u) => {
         refresh(u.asInstanceOf[AnyRef])
         f(u)
       }
@@ -67,15 +65,14 @@ trait QueryHelper {
     /**
      * filling parameter and calling fillParamAndExec on query
      */
-    import JavaConversions._
-    protected def fillParamAndExec[T](q: Query, param: AnyRef*): Buffer[T] = {
+    protected def fillParamAndExec[T](q: QueryWrapper[T], param: AnyRef*): Buffer[T] = {
       var i: Int = 1
       param.foreach {
         x =>
           q.setParameter(i, x)
           i += 1
       }
-      q.getResultList.asInstanceOf[java.util.List[T]]
+      q.getResultList
     }
 
   }
@@ -86,7 +83,7 @@ trait QueryHelper {
      * doing Query
      */
     def withQuery(query: String, param: AnyRef*): A = {
-      val q = createQuery(query)
+      val q = createQuery[T](query)
 
       val res = fillParamAndExec[T](q, param: _*)
       if (res.isEmpty)
@@ -104,7 +101,7 @@ trait QueryHelper {
      * doing native Query
      */
     def withNativeQuery(query: String, param: AnyRef*): A = {
-      val q = createNativeQuery(query)
+      val q = createNativeQuery[T](query)
 
       val res = fillParamAndExec[T](q, param: _*)
       if (!res.isEmpty)
@@ -122,10 +119,9 @@ trait QueryHelper {
     /**
      * doing Query from Filter Object
      */
-    import JavaConversions._
     def withQuery(filter: AnyRef): A = {
       val q = createFilterQuery(filter)
-      val res = q.getResultList.asInstanceOf[java.util.List[T]]
+      val res = q.getResultList
       if (res.isEmpty)
         throw new JPAExtensionException("Filter with Query: " + getQueryId(filter) + " has no results")
       body(res.head)
@@ -142,7 +138,7 @@ trait QueryHelper {
      * doing Query
      */
     def withQuery(query: String, param: AnyRef*): Unit = {
-      val q = createQuery(query)
+      val q = createQuery[T](query)
 
       val res = fillParamAndExec[T](q, param: _*)
       res.foreach {
@@ -159,10 +155,9 @@ trait QueryHelper {
     /**
      * doing Query from Filter Object
      */
-    import JavaConversions._
     def withQuery(filter: AnyRef): Unit = {
-      val q = createFilterQuery(filter)
-      val res = q.getResultList.asInstanceOf[java.util.List[T]]
+      val q = createFilterQuery[T](filter)
+      val res = q.getResultList
       res.foreach {
         x => body(x)
       }
@@ -178,7 +173,7 @@ trait QueryHelper {
   /**
    * creates query using filter object
    */
-  def createFilterQuery(filter: AnyRef) = {
+  def createFilterQuery[T](filter: AnyRef) = {
 
     val query = getQueryInstance(getQueryId(filter))
 
@@ -230,7 +225,7 @@ trait QueryHelper {
 
     val entityName = getEntityName(filter)
 
-    var jPAQuery: Query = null
+    var jPAQuery: QueryWrapper[T] = null
 
     val alias = query.alias
     val where = replaceSnippets(query.jpql)
@@ -256,7 +251,7 @@ trait QueryHelper {
     if (where != null && where.length() > 0) {
       val queryString = select + " from " + entityName + " " + qStr + " " + " where " + where + orderBy
 
-      jPAQuery = createQuery(queryString)
+      jPAQuery = createQuery[T](queryString)
 
       query.filterClass.binding.keySet.foreach {
         key =>
@@ -267,7 +262,7 @@ trait QueryHelper {
     } else {
       val queryString = " from " + entityName + " " + qStr + " " + orderBy;
 
-      jPAQuery = createQuery(queryString)
+      jPAQuery = createQuery[T](queryString)
     }
 
     jPAQuery

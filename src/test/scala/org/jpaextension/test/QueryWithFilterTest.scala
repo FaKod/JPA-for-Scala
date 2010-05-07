@@ -1,10 +1,10 @@
 package org.jpaextension.test
 
-import org.jpaextension.manager.{UsesEntityManager, QueryHelper}
 import org.specs.SpecificationWithJUnit
 import org.jpaextension.filter.QueryId
 import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
+import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerMFactory, UsesEntityManager, QueryHelper}
 
 /**
  * User: FaKod
@@ -16,7 +16,8 @@ class NameFilter {
   var name: String = _
 }
 
-class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper {
+class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+  def getPersistenceUnitName = "mip"
   "A Query with Filter" should {
 
     "create Object Items" in {
@@ -38,11 +39,11 @@ class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager 
 
       val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
       filter.name = "%Test%"
-      
+
       val filter2: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
       filter2.name = "%Test:%"
 
-      var i:Int = 0
+      var i: Int = 0
       forQueryResults {
         oi: ObjectItem =>
           i = i + 1
