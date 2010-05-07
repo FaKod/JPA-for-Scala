@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Christopher Schmidt
+ * Copyright 2010 Christopher Schmidt
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,40 @@ package org.jpaextension.manager
 import javax.persistence.EntityManager
 
 /**
- * User: FaKod
- * Date: 07.05.2010
- * Time: 11:20:07
+ * Mixin for creating a Entity Manager Factory
+ * Class has to implement getPersistenceUnitName to provide
+ * the persistence unit name
+ * @author Christopher Schmidt
  */
-
 trait SimpleEntityManagerFactory {
 
+  /**
+   * create a entity manager factory with persistence
+   * unit name getPersistenceUnitName
+   */
   object MyEntityManagerFactory extends LocalEntityManagerFactory(getPersistenceUnitName, true)
 
+  /**
+   * to be implemented to provide the persistence unit name
+   * @return String persistence unit name
+   */
   protected def getPersistenceUnitName : String
 
+  /**
+   * opens a new instance of Entity Manager
+   * @return EnityManager new instance
+   */
   def openEM = MyEntityManagerFactory.openEM
 
-  def closeEM(em: EntityManager) = MyEntityManagerFactory.closeEM(em)
+  /**
+   * closes the given EnityManager
+   * @return Unit
+   */
+  def closeEM(em: EntityManager):Unit = MyEntityManagerFactory.closeEM(em)
 
-  def getUnitName = MyEntityManagerFactory.getUnitName
+  /**
+   * retrieve the persistence unit name
+   * @return String persistence unit name
+   */
+  def getUnitName:String = MyEntityManagerFactory.getUnitName
 }

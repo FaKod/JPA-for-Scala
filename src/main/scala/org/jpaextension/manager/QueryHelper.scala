@@ -1,3 +1,18 @@
+/*
+ * Copyright 2010 Christopher Schmidt
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
 package org.jpaextension.manager
 
 import org.jpaextension.exception.JPAExtensionException
@@ -8,19 +23,19 @@ import java.util.regex.Pattern
 import org.jpaextension.ReflectionUtil
 
 /**
- * User: FaKod
- * Date: 02.05.2010
- * Time: 11:45:47
- */
-
-/**
- * query helper to ease handling of queries
+ * query helper to ease handling of queries through the use of
+ * closures or the use of filter objects
+ *
+ * @author Christopher Schmidt
  */
 trait QueryHelper {
   self: UsesEntityManager =>
 
   /**
    * finds an entity with id, does a refresh and executes f() with it
+   * @param c Class to find
+   * @param id ref to id instance (primary key)
+   * @return A return value of the applied function
    */
   protected def findAndApply[T, A](c: Class[T], id: AnyRef)(f: T => A): A = {
     find[T](c, id) match {
@@ -34,37 +49,47 @@ trait QueryHelper {
 
   /**
    * finds and entity with id and returns it
+   * @see findAndApply no need to apply a function
+   * @param c Class to find
+   * @param id ref to id instance (primary key)
+   * @return T instance of Class c
    */
   protected def findSimple[T](c: Class[T], id: AnyRef): T =
     findAndApply(c, id) {x => x}
 
   /**
    * creates a simple query for one entity and query parameter list
+   * @param ((T)=>A) function to be applied
+   * @return A return value of the applied function
    */
   protected def oneResultQueryAndApply[A, T](body: (T) => A): DoWithQuery[A, T] =
     new DoWithQuery[A, T](body)
 
   /**
    * creates a simple query without closure
+   * @return A return value of the applied function
    */
   protected def oneResultQuery[A, T]: DoWithQuery[A, T] =
     new DoWithQuery[A, T]({x: T => x.asInstanceOf[A]})
 
   /**
    * executes query and applies body() to each element
+   * @param ((T)=>Unit) function to be applies on each element
+   * @return Unit
    */
   protected def forQueryResults[T](body: (T) => Unit): DoWithForQuery[T] =
     new DoWithForQuery[T](body)
 
 
   /**
-   * see oneResultQuery
+   * see DoWithQueryBase Class 
    */
   protected class DoWithQueryBase {
 
     /**
      * filling parameter and calling fillParamAndExec on query
      */
+    //@TODO rewrite this to use EntityManagerWrapper stuff
     protected def fillParamAndExec[T](q: QueryWrapper[T], param: AnyRef*): Buffer[T] = {
       var i: Int = 1
       param.foreach {
@@ -77,10 +102,15 @@ trait QueryHelper {
 
   }
 
+  /**
+   * class for one result queries
+   */
   protected class DoWithQuery[A, T](body: (T) => A) extends DoWithQueryBase {
 
     /**
      * doing Query
+     * @param query JPQL query text
+     * @param param list of query parameter
      */
     def withQuery(query: String, param: AnyRef*): A = {
       val q = createQuery[T](query)
@@ -93,12 +123,16 @@ trait QueryHelper {
 
     /**
      * doing Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param list of query parameter
      */
     def withQuery(query: QueryId, param: AnyRef*): A =
       withQuery(getJPQL(query), param: _*)
 
     /**
      * doing native Query
+     * @param query JPQL query text
+     * @param param list of query parameter
      */
     def withNativeQuery(query: String, param: AnyRef*): A = {
       val q = createNativeQuery[T](query)
@@ -112,12 +146,15 @@ trait QueryHelper {
 
     /**
      * doing native Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param list of query parameter
      */
     def withNativeQuery(query: QueryId, param: AnyRef*): A =
       withNativeQuery(getJPQL(query), param: _*)
 
     /**
      * doing Query from Filter Object
+     * @param filter instance of filter object
      */
     def withQuery(filter: AnyRef): A = {
       val q = createFilterQuery(filter)
@@ -130,12 +167,14 @@ trait QueryHelper {
 
 
   /**
-   * see forResults
+   * see forResults (for more than one result)
    */
   protected class DoWithForQuery[T](body: (T) => Unit) extends DoWithQueryBase {
 
     /**
      * doing Query
+     * @param query JPQL query text
+     * @param param list of query parameter
      */
     def withQuery(query: String, param: AnyRef*): Unit = {
       val q = createQuery[T](query)
@@ -148,12 +187,15 @@ trait QueryHelper {
 
     /**
      * doing Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param list of query parameter
      */
     def withQuery(query: QueryId, param: AnyRef*): Unit =
       withQuery(getJPQL(query), param: _*)
 
     /**
      * doing Query from Filter Object
+     * @param filter instance of filter object
      */
     def withQuery(filter: AnyRef): Unit = {
       val q = createFilterQuery[T](filter)
@@ -166,15 +208,21 @@ trait QueryHelper {
 
   /**
    * creates new filter instance
+   * @param query Query ID (from JPAExtension.xml)
+   * @param entity Class the filter should return
    */
   def newFilterInstance[T](queryId: QueryId, entity: Class[_]) =
     FilterFactory.newFilterInstance[T](queryId, entity)
 
   /**
    * creates query using filter object
+   * @param filter instance of filter object
    */
   def createFilterQuery[T](filter: AnyRef) = {
 
+    /**
+     * query instance from filters Query ID
+     */
     val query = getQueryInstance(getQueryId(filter))
 
     /**
@@ -270,8 +318,9 @@ trait QueryHelper {
 
   /**
    * returns a List of query annotations
+   * @param filter instance of filter object
    */
-  def getFilterAnnotations(filter:AnyRef) = {
+  def getFilterAnnotations(filter: AnyRef) = {
     val query = getQueryInstance(getQueryId(filter))
     query.annotation
   }

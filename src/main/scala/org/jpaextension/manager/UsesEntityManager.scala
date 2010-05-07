@@ -18,12 +18,15 @@ package org.jpaextension.manager
 
 
 /**
- * closures for Transaction management
+ * Mixin for Transaction management
+ * @author Christopher Schmidt
  */
 trait UsesEntityManager extends EntityManagerWrapper {
 
   /**
    * creates transaction and executes a commit
+   * @param (=> T) function to be applied between transaction and commit
+   * @return T return value of the applied function
    */
   def withTrxAndCommit[T](f: => T): T = {
 
@@ -53,6 +56,8 @@ trait UsesEntityManager extends EntityManagerWrapper {
 
   /**
    * creates transaction and executes a rollback
+   * @param (=> T) function to be applied between transaction and rollback
+   * @return T return value of the applied function
    */
   def withTrxAndRollback[T](f: => T): T = {
 
@@ -79,6 +84,8 @@ trait UsesEntityManager extends EntityManagerWrapper {
 
   /**
    * simply executes f
+   * @param (=> T) function to be applied without transaction
+   * @return T return value of the applied function
    */
   def withNoTrx[T](f: => T): T = f
 }

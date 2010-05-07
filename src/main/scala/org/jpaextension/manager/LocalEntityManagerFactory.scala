@@ -94,10 +94,10 @@ class LocalEntityManagerFactory(val unitName: String, val userTx: Boolean, prope
    * for the given persistence unit.
    */
   def openEM() = {
-    val em = emf.createEntityManager()
+    val em = emf.createEntityManager
 
     if (!userTx) {
-      em.getTransaction.begin() //@TODO user transaction handling
+      em.getTransaction.begin
     }
 
     em
@@ -107,24 +107,28 @@ class LocalEntityManagerFactory(val unitName: String, val userTx: Boolean, prope
    * Closes the underlying EM and handles the transaction if configured
    * to do so.
    */
-  def closeEM(em: EntityManager) = {
+  def closeEM(em: EntityManager):Unit = {
     if (!userTx) {
       if (em.getTransaction.getRollbackOnly) {
-        em.getTransaction.rollback()
+        em.getTransaction.rollback
       } else {
-        em.getTransaction.commit()
+        em.getTransaction.commit
       }
     }
 
-    em.close()
+    em.close
   }
 
+  /**
+   * retrieves the persistence unit name
+   * @return String persistence unit name
+   */
   def getUnitName = unitName
 
   /**
    * Closes the underlying EMF. This should be called to release any held
    * resources to prevent memory leaks.
    */
-  def shutdownEMFactory = emf.close()
+  def shutdownEMFactory:Unit = emf.close
 }
 

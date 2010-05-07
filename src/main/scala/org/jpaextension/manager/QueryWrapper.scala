@@ -23,14 +23,11 @@ import collection.mutable.Buffer
 /**
  * This class represents a Scalafied version of the JPA Query class. Big
  * features include better type safety and returning results as Lists. Instances
- * of this class should be obtained via a ScalaEntityManager instance.
+ * of this class should be obtained via a EntityManagerWrapper instance.
  *
  * @author Derek Chen-Becker
  */
 class QueryWrapper[A](val query: Query) {
-
-  // value added methods
-
   /**
    * Returns the results of the query as a <code>Buffer[A]</code>.
    */
