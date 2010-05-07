@@ -46,7 +46,7 @@ trait QueryHelper {
         f(u)
       }
     }
-  }
+  } //@TODO find a way to use implicit ClassManifest
 
   /**
    * finds and entity with id and returns it
