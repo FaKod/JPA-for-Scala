@@ -21,6 +21,7 @@ import collection.mutable.Buffer
 import FilterFactory._
 import java.util.regex.Pattern
 import org.jpaextension.ReflectionUtil
+import reflect.{ClassManifest}
 
 /**
  * query helper to ease handling of queries through the use of
@@ -50,34 +51,39 @@ trait QueryHelper {
   /**
    * finds and entity with id and returns it
    * @see findAndApply no need to apply a function
-   * @param c Class to find
+   * usage example: (ObjectItem is the type of the Entity)
+   * <code>
+   * val item = find[ObjectItem](id)
+   * <code>
+   * @param T return type of entity
    * @param id ref to id instance (primary key)
    * @return T instance of Class c
    */
-  protected def findSimple[T](c: Class[T], id: AnyRef): T =
-    findAndApply(c, id) {x => x}
+  protected def find[T](id: AnyRef)(implicit m: ClassManifest[T]): T =
+    findAndApply(m.erasure.asInstanceOf[Class[T]], id)(x => x)
+
 
   /**
    * creates a simple query for one entity and query parameter list
-   * @param ((T)=>A) function to be applied
+   * @param ( ( T ) =>A) function to be applied
    * @return A return value of the applied function
    */
-  protected def oneResultQueryAndApply[A, T](body: (T) => A): DoWithQuery[A, T] =
+  protected def oneResultQueryAndApply[A, T](body: (T) => A)(implicit m: ClassManifest[T]): DoWithQuery[A, T] =
     new DoWithQuery[A, T](body)
 
   /**
    * creates a simple query without closure
    * @return A return value of the applied function
    */
-  protected def oneResultQuery[A, T]: DoWithQuery[A, T] =
+  protected def oneResultQuery[A, T](implicit m: ClassManifest[T]): DoWithQuery[A, T] =
     new DoWithQuery[A, T]({x: T => x.asInstanceOf[A]})
 
   /**
    * executes query and applies body() to each element
-   * @param ((T)=>Unit) function to be applies on each element
+   * @param ( ( T ) =>Unit) function to be applies on each element
    * @return Unit
    */
-  protected def forQueryResults[T](body: (T) => Unit): DoWithForQuery[T] =
+  protected def forQueryResults[T](body: (T) => Unit)(implicit m: ClassManifest[T]): DoWithForQuery[T] =
     new DoWithForQuery[T](body)
 
 
@@ -105,7 +111,7 @@ trait QueryHelper {
   /**
    * class for one result queries
    */
-  protected class DoWithQuery[A, T](body: (T) => A) extends DoWithQueryBase {
+  protected class DoWithQuery[A, T](body: (T) => A)(implicit m: ClassManifest[T]) extends DoWithQueryBase {
 
     /**
      * doing Query
@@ -169,7 +175,7 @@ trait QueryHelper {
   /**
    * see forResults (for more than one result)
    */
-  protected class DoWithForQuery[T](body: (T) => Unit) extends DoWithQueryBase {
+  protected class DoWithForQuery[T](body: (T) => Unit)(implicit m: ClassManifest[T]) extends DoWithQueryBase {
 
     /**
      * doing Query
@@ -211,14 +217,14 @@ trait QueryHelper {
    * @param query Query ID (from JPAExtension.xml)
    * @param entity Class the filter should return
    */
-  def newFilterInstance[T](queryId: QueryId, entity: Class[_]) =
+  def newFilterInstance[T](queryId: QueryId, entity: Class[_] = null) =
     FilterFactory.newFilterInstance[T](queryId, entity)
 
   /**
    * creates query using filter object
    * @param filter instance of filter object
    */
-  def createFilterQuery[T](filter: AnyRef) = {
+  def createFilterQuery[T](filter: AnyRef)(implicit m: ClassManifest[T]) = {
 
     /**
      * query instance from filters Query ID
@@ -271,7 +277,10 @@ trait QueryHelper {
     }
 
 
-    val entityName = getEntityName(filter)
+    val entityName = getEntityName(filter) match {
+      case null => m.erasure.getSimpleName
+      case x: String => x
+    }
 
     var jPAQuery: QueryWrapper[T] = null
 

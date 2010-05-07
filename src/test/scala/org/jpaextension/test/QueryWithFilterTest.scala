@@ -37,10 +37,10 @@ class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager 
 
     "execute a Query and apply f on results" in {
 
-      val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
+      val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"))
       filter.name = "%Test%"
 
-      val filter2: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
+      val filter2: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"))
       filter2.name = "%Test:%"
 
       var i: Int = 0

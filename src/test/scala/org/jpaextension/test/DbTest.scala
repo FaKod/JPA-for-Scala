@@ -35,7 +35,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
       }
 
       withNoTrx {
-        val result = createQuery("Select oi from ObjectItem oi").getResultList
+        val result = createQuery[ObjectItem]("Select oi from ObjectItem oi").getResultList
         result.size must_== 1
       }
     }
@@ -43,12 +43,12 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
     "Scala Filter should return one filtered ObjectItem instance" in {
 
       withNoTrx {
-        val MyFilter: SomeFilter = newFilterInstance(QueryId("MyOIQuery"), classOf[ObjectItem])
+        val MyFilter: SomeFilter = newFilterInstance(QueryId("MyOIQuery"))
 
         MyFilter.creatorId = BigInteger.valueOf(815)
         MyFilter.nameTxt = "Test1"
 
-        val result = createFilterQuery(MyFilter).getResultList
+        val result = createFilterQuery[ObjectItem](MyFilter).getResultList
         result.size must_== 1
       }
 
@@ -57,12 +57,12 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
     "Java Filter should return one filtered ObjectItem instance" in {
 
       withNoTrx {
-        val MyFilter: SomeJavaTestFilter = newFilterInstance(QueryId("MyOIQuery2"), classOf[ObjectItem])
+        val MyFilter: SomeJavaTestFilter = newFilterInstance(QueryId("MyOIQuery2"))
 
         MyFilter.creatorId = BigInteger.valueOf(815)
         MyFilter.nameTxt = "Test1"
 
-        val result = createFilterQuery(MyFilter).getResultList
+        val result = createFilterQuery[ObjectItem](MyFilter).getResultList
         result.size must_== 1
       }
     }
@@ -106,7 +106,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
       }
 
       withNoTrx {
-        val result = createQuery("Select oi from ObjectItem oi").getResultList
+        val result = createQuery[ObjectItem]("Select oi from ObjectItem oi").getResultList
         result.size must_== 0
       }
     }

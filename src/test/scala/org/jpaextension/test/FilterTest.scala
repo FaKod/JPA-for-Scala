@@ -29,11 +29,11 @@ class FilterTest extends SpecificationWithJUnit with UsesEntityManager with Quer
 
     "enhance the Filter objects" in {
 
-      val f1: Filter1 = newFilterInstance(QueryId("query1"), null)
-      val f2: Filter2 = newFilterInstance(QueryId("query2"), null)
-      val f3: Filter3 = newFilterInstance(QueryId("query3"), null)
-      val f4: Filter1 = newFilterInstance(QueryId("query4"), null)
-      val f5: Filter2 = newFilterInstance(QueryId("query5"), null)
+      val f1: Filter1 = newFilterInstance(QueryId("query1"))
+      val f2: Filter2 = newFilterInstance(QueryId("query2"))
+      val f3: Filter3 = newFilterInstance(QueryId("query3"))
+      val f4: Filter1 = newFilterInstance(QueryId("query4"))
+      val f5: Filter2 = newFilterInstance(QueryId("query5"))
 
       val f1s = getQueryId(f1)
       val f2s = getQueryId(f2)

@@ -41,7 +41,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     "find an entity" in {
       ids.foreach {
         id =>
-          val item = findSimple(classOf[ObjectItem], id)
+          val item = find[ObjectItem](id)
           item.getId must_== id
       }
     }
