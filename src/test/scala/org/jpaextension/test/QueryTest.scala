@@ -5,7 +5,7 @@ import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 import org.jpaextension.filter.QueryId
 import collection.mutable.Queue
-import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerMFactory, QueryHelper, UsesEntityManager}
+import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerFactory, QueryHelper, UsesEntityManager}
 
 /**
  * User: FaKod
@@ -13,7 +13,7 @@ import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerMF
  * Time: 20:36:06
  */
 
-class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
   def getPersistenceUnitName = "mip"
   "A Query" should {
 

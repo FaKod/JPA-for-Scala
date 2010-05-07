@@ -23,7 +23,7 @@ import javax.persistence.EntityManager
  * Time: 11:20:07
  */
 
-trait SimpleEntityManagerMFactory {
+trait SimpleEntityManagerFactory {
 
   object MyEntityManagerFactory extends LocalEntityManagerFactory(getPersistenceUnitName, true)
 

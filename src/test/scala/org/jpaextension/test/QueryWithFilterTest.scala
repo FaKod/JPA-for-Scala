@@ -4,7 +4,7 @@ import org.specs.SpecificationWithJUnit
 import org.jpaextension.filter.QueryId
 import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
-import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerMFactory, UsesEntityManager, QueryHelper}
+import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerFactory, UsesEntityManager, QueryHelper}
 
 /**
  * User: FaKod
@@ -16,7 +16,7 @@ class NameFilter {
   var name: String = _
 }
 
-class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
   def getPersistenceUnitName = "mip"
   "A Query with Filter" should {
 

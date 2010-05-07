@@ -14,7 +14,7 @@ import org.specs.{SpecificationWithJUnit}
 import org.jpaextension.manager._
 
 
-class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerMFactory with ThreadLocalEntityManager {
+class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
 
   def getPersistenceUnitName = "mip"
 
