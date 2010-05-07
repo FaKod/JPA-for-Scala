@@ -12,6 +12,22 @@ The JPA Extension should support
 * Domain value check (-> "JDBCluster: Domains":http://fakod.eu/wiki/index.php?title=JDBCluster#Domains_for_Attributes) using "Bean Validation":http://www.jcp.org/en/jsr/detail?id=303
 * all this provided as Scala library
 
+h1. Entity Manager and Entity Manager Factory
+
+The framework suports custom EntityManagerFactory implementations. To simplify usage two Traits can be used.
+
+_SimpleEntityManagerFactory_ provides a non JNDI environment EM factory. Method _getPersistenceUnitName_ has to be implemented to provide the persistence unit name as defined in persistence.xml.
+
+_ThreadLocalEntityManager_ provides one Entity Manager instance per Thread.
+
+Example:
+
+<pre>
+class MyClass extends Something with SimpleEntityManagerFactory with ThreadLocalEntityManager {
+ def getPersistenceUnitName = "mip"
+}
+</pre>
+
 h1. Queries and Transactions
 
 h2. define query strings
