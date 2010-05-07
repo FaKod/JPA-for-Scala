@@ -61,7 +61,7 @@ class LocalEntityManagerFactory(val unitName: String, val userTx: Boolean, prope
   /**
    * Creates a new EM manager with the specified transaction management.
    *
-   *  * @param unitName The persistence unit name that this EM should represent
+   * @param unitName The persistence unit name that this EM should represent
    * @param userTx controls whether the user is responsible for handling transactions.
    * <code>true</code> means that the user will begin and end transactions,
    * <code>false</code> means that the LocalEM will handle it for the user.
@@ -96,9 +96,9 @@ class LocalEntityManagerFactory(val unitName: String, val userTx: Boolean, prope
   def openEM() = {
     val em = emf.createEntityManager()
 
-//    if (!userTx) {
-//      em.getTransaction.begin() //@TODO user transaction handling
-//    }
+    if (!userTx) {
+      em.getTransaction.begin() //@TODO user transaction handling
+    }
 
     em
   }

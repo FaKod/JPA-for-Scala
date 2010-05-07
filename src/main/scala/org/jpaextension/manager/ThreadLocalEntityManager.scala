@@ -23,7 +23,7 @@ import javax.persistence.EntityManager
  * An example would be:
  *
  * <pre>
- * object MyEM extends LocalEMF("test") with ThreadLocalEntityManager
+ * object MyEM extends LocalEMFactory("test") with ThreadLocalEntityManager
  *
  * ...
  * MyEM.createNamedQuery(...)
@@ -36,12 +36,18 @@ import javax.persistence.EntityManager
  * Best practice for this code is to ensure that when the
  * thread exits it calls the cleanup method so that the EM is properly closed.
  */
-
-
-
 trait ThreadLocalEntityManager extends EntityManagerWrapper with EntityManagerFactory {
+  class ScalaThreadLocal[T](getInitialValue: => (T)) extends ThreadLocal[T] {
+    override protected def initialValue = getInitialValue
+  }
 
-  EMCache.initCache(openEM)
+  object EMCache {
+    private val cache: ScalaThreadLocal[EntityManager] = new ScalaThreadLocal[EntityManager](openEM)
+
+    def get = cache.get
+
+    def remove = cache.remove
+  }
 
   def em = EMCache.get
 
@@ -60,16 +66,5 @@ trait ThreadLocalEntityManager extends EntityManagerWrapper with EntityManagerFa
   }
 }
 
-private[manager] class ScalaThreadLocal[T](getInitialValue: =>(T)) extends ThreadLocal[T] {
-  override protected def initialValue = getInitialValue
-}
 
-private[manager] object EMCache {
-  var cache:ScalaThreadLocal[EntityManager] = _
-
-  def initCache(f: => EntityManager) = if(cache==null) cache = new ScalaThreadLocal[EntityManager](f)
-
-  def get = cache.get
-  def remove = cache.remove
-}
 
