@@ -136,6 +136,16 @@ trait QueryHelper {
       withQuery(getJPQL(query), param: _*)
 
     /**
+     * doing Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param Map of query parameter
+     */
+    def withQuery(query: QueryId, param: Map[String, Any]): A = {
+      //@TODO implement this
+      null.asInstanceOf[A]
+    }
+
+    /**
      * doing native Query
      * @param query JPQL query text
      * @param param list of query parameter
@@ -151,12 +161,32 @@ trait QueryHelper {
     }
 
     /**
+     * doing native Query
+     * @param query JPQL query text
+     * @param param Map of query parameter
+     */
+    def withNativeQuery(query: String, param: Map[String, Any]): A = {
+      //@TODO implement this
+      null.asInstanceOf[A]
+    }
+
+    /**
      * doing native Query from JPAExtensions QueryId
      * @param query Query ID (from JPAExtension.xml)
      * @param param list of query parameter
      */
     def withNativeQuery(query: QueryId, param: AnyRef*): A =
       withNativeQuery(getJPQL(query), param: _*)
+
+    /**
+     * doing native Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param Map of query parameter
+     */
+    def withNativeQuery(query: QueryId, param: Map[String, Any]): A = {
+      //@TODO implement this
+      null.asInstanceOf[A]
+    }
 
     /**
      * doing Query from Filter Object
@@ -180,7 +210,7 @@ trait QueryHelper {
     /**
      * doing Query
      * @param query JPQL query text
-     * @param param list of query parameter
+     * @param param list of query parameter (nu
      */
     def withQuery(query: String, param: AnyRef*): Unit = {
       val q = createQuery[T](query)
@@ -192,12 +222,30 @@ trait QueryHelper {
     }
 
     /**
+     * doing Query
+     * @param query JPQL query text
+     * @param param MAP of query parameter
+     */
+    def withQuery(query: String, param: Map[String, Any]): Unit = {
+      //@TODO implement this
+    }
+
+    /**
      * doing Query from JPAExtensions QueryId
      * @param query Query ID (from JPAExtension.xml)
      * @param param list of query parameter
      */
     def withQuery(query: QueryId, param: AnyRef*): Unit =
       withQuery(getJPQL(query), param: _*)
+
+    /**
+     * doing Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param Map of query parameter
+     */
+    def withQuery(query: QueryId, param: Map[String, Any]): Unit = {
+      //@TODO implement this
+    }
 
     /**
      * doing Query from Filter Object
@@ -211,6 +259,10 @@ trait QueryHelper {
       }
     }
   }
+
+
+  // FILTER STUFF
+
 
   /**
    * creates new filter instance
