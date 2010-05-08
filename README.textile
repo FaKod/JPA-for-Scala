@@ -71,7 +71,7 @@ The above defined query with the ID _FindObjectItemFromNameWithFilter_ can use t
 Since the query can return more than one result _forQueryResults_ can be used to iterate over the result-set.
 
 <pre>
-val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"), classOf[ObjectItem])
+val filter: NameFilter = newFilterInstance(QueryId("FindObjectItemFromNameWithFilter"))
 filter.name = "%Test%"
 
 var i = 0
@@ -180,7 +180,7 @@ The following code creates a Filter Object _myFilter_, sets the binding paramete
 
 <pre>
 withNoTrx {
-	val myFilter: SomeFilter = newFilterInstance(QueryId("MyOIQuery"), classOf[ObjectItem])
+	val myFilter: SomeFilter = newFilterInstance(QueryId("MyOIQuery"))
 
 	myFilter.creatorId = BigInteger.valueOf(815)
 	myFilter.nameTxt = "Test1"
