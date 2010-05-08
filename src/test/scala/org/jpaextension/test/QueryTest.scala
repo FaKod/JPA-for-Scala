@@ -70,7 +70,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
       oneResultQueryAndApply {
         oi: ObjectItem =>
           i = i + 1
-      } withQuery (QueryId("FindObjectItemFromName"), "%Test%")
+      } withQuery (QueryId("FindObjectItemFromName"), "Test:10")
       i must_== 1
     }
 

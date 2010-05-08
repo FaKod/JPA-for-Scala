@@ -70,6 +70,8 @@ object QueryId {
  */
 class QueryId(qid:String) {
   def queryId = qid
+
+  override def toString = qid
 }
 
 

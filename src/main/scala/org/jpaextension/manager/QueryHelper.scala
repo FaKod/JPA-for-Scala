@@ -96,14 +96,23 @@ trait QueryHelper {
      * filling parameter and calling fillParamAndExec on query
      */
     //@TODO rewrite this to use EntityManagerWrapper stuff
-    protected def fillParamAndExec[T](q: QueryWrapper[T], param: AnyRef*): Buffer[T] = {
+    protected def fillParam[T](q: QueryWrapper[T], param: AnyRef*) = {
       var i: Int = 1
       param.foreach {
         x =>
           q.setParameter(i, x)
           i += 1
       }
-      q.getResultList
+      q
+    }
+
+    /**
+     * filling parameter and calling fillParamAndExec on query
+     */
+    //@TODO rewrite this to use EntityManagerWrapper stuff
+    protected def fillParam[T](q: QueryWrapper[T], param: Map[String, AnyRef]) = {
+      param.foreach(p => q.setParameter(p._1, p._2))
+      q
     }
 
   }
@@ -119,12 +128,12 @@ trait QueryHelper {
      * @param param list of query parameter
      */
     def withQuery(query: String, param: AnyRef*): A = {
-      val q = createQuery[T](query)
+      val q = fillParam[T](createQuery[T](query), param: _*)
 
-      val res = fillParamAndExec[T](q, param: _*)
-      if (res.isEmpty)
-        throw new JPAExtensionException("Query: " + query + " has no results")
-      body(res.head)
+      q.findOne match {
+        case Some(x) => return body(x)
+        case None => throw new JPAExtensionException("Query: " + query + " has no results")
+      }
     }
 
     /**
@@ -140,9 +149,13 @@ trait QueryHelper {
      * @param query Query ID (from JPAExtension.xml)
      * @param param Map of query parameter
      */
-    def withQuery(query: QueryId, param: Map[String, Any]): A = {
-      //@TODO implement this
-      null.asInstanceOf[A]
+    def withQuery(query: QueryId, param: Map[String, AnyRef]): A = {
+      val q = fillParam[T](createQuery[T](getJPQL(query)), param)
+
+      q.findOne match {
+        case Some(x) => return body(x)
+        case None => throw new JPAExtensionException("Query: " + query + " has no results")
+      }
     }
 
     /**
@@ -151,13 +164,12 @@ trait QueryHelper {
      * @param param list of query parameter
      */
     def withNativeQuery(query: String, param: AnyRef*): A = {
-      val q = createNativeQuery[T](query)
+      val q = fillParam[T](createNativeQuery[T](query), param: _*)
 
-      val res = fillParamAndExec[T](q, param: _*)
-      if (!res.isEmpty)
-        body(res.head)
-      else
-        null.asInstanceOf[A]
+      q.findOne match {
+        case Some(x) => body(x)
+        case None => null.asInstanceOf[A]
+      }
     }
 
     /**
@@ -165,9 +177,13 @@ trait QueryHelper {
      * @param query JPQL query text
      * @param param Map of query parameter
      */
-    def withNativeQuery(query: String, param: Map[String, Any]): A = {
-      //@TODO implement this
-      null.asInstanceOf[A]
+    def withNativeQuery(query: String, param: Map[String, AnyRef]): A = {
+      val q = fillParam[T](createNativeQuery[T](query), param)
+
+      q.findOne match {
+        case Some(x) => body(x)
+        case None => null.asInstanceOf[A]
+      }
     }
 
     /**
@@ -183,9 +199,8 @@ trait QueryHelper {
      * @param query Query ID (from JPAExtension.xml)
      * @param param Map of query parameter
      */
-    def withNativeQuery(query: QueryId, param: Map[String, Any]): A = {
-      //@TODO implement this
-      null.asInstanceOf[A]
+    def withNativeQuery(query: QueryId, param: Map[String, AnyRef]): A = {
+      withNativeQuery(getJPQL(query), param)
     }
 
     /**
@@ -194,10 +209,11 @@ trait QueryHelper {
      */
     def withQuery(filter: AnyRef): A = {
       val q = createFilterQuery(filter)
-      val res = q.getResultList
-      if (res.isEmpty)
-        throw new JPAExtensionException("Filter with Query: " + getQueryId(filter) + " has no results")
-      body(res.head)
+
+      q.findOne match {
+        case Some(x) => return body(x)
+        case None => throw new JPAExtensionException("Filter with Query: " + getQueryId(filter) + " has no results")
+      }
     }
   }
 
@@ -213,12 +229,8 @@ trait QueryHelper {
      * @param param list of query parameter (nu
      */
     def withQuery(query: String, param: AnyRef*): Unit = {
-      val q = createQuery[T](query)
-
-      val res = fillParamAndExec[T](q, param: _*)
-      res.foreach {
-        x => body(x)
-      }
+      val q = fillParam[T](createQuery[T](query), param: _*)
+      q.getResultList.foreach(x => body(x))
     }
 
     /**
@@ -226,8 +238,9 @@ trait QueryHelper {
      * @param query JPQL query text
      * @param param MAP of query parameter
      */
-    def withQuery(query: String, param: Map[String, Any]): Unit = {
-      //@TODO implement this
+    def withQuery(query: String, param: Map[String, AnyRef]): Unit = {
+      val q = fillParam[T](createQuery[T](query), param)
+      q.getResultList.foreach(x => body(x))
     }
 
     /**
@@ -243,8 +256,9 @@ trait QueryHelper {
      * @param query Query ID (from JPAExtension.xml)
      * @param param Map of query parameter
      */
-    def withQuery(query: QueryId, param: Map[String, Any]): Unit = {
-      //@TODO implement this
+    def withQuery(query: QueryId, param: Map[String, AnyRef]): Unit = {
+      val q = fillParam[T](createQuery[T](getJPQL(query)), param)
+      q.getResultList.foreach(x => body(x))
     }
 
     /**
