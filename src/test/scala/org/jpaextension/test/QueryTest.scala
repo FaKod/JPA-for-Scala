@@ -49,7 +49,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     "find an entity and apply" in {
       ids.foreach {
         id =>
-          findAndApply(classOf[ObjectItem], id) {
+          findAndApply(id) {
             oi: ObjectItem =>
               oi.getId must_== id
           }

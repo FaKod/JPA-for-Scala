@@ -17,7 +17,6 @@ package org.jpaextension.manager
 
 import org.jpaextension.exception.JPAExtensionException
 import org.jpaextension.filter.{FilterFactory, QueryId}
-import collection.mutable.Buffer
 import FilterFactory._
 import java.util.regex.Pattern
 import org.jpaextension.ReflectionUtil
@@ -34,19 +33,18 @@ trait QueryHelper {
 
   /**
    * finds an entity with id, does a refresh and executes f() with it
-   * @param c Class to find
    * @param id ref to id instance (primary key)
    * @return A return value of the applied function
    */
-  protected def findAndApply[T, A](c: Class[T], id: AnyRef)(f: T => A): A = {
-    find[T](c, id) match {
-      case None => throw new JPAExtensionException("Entity: " + c + " not found with parameter: " + id)
+  protected def findAndApply[T, A](id: AnyRef)(f: T => A)(implicit m: ClassManifest[T]): A = {
+    find[T](m.erasure.asInstanceOf[Class[T]], id) match {
+      case None => throw new JPAExtensionException("Entity: " + m.erasure.asInstanceOf[Class[T]] + " not found with parameter: " + id)
       case Some(u) => {
         refresh(u.asInstanceOf[AnyRef])
         f(u)
       }
     }
-  } //@TODO find a way to use implicit ClassManifest
+  }
 
   /**
    * finds and entity with id and returns it
@@ -60,7 +58,7 @@ trait QueryHelper {
    * @return T instance of Class c
    */
   protected def find[T](id: AnyRef)(implicit m: ClassManifest[T]): T =
-    findAndApply(m.erasure.asInstanceOf[Class[T]], id)(x => x)
+    findAndApply[T,T](id)(x => x)
 
 
   /**

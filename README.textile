@@ -119,8 +119,8 @@ h2. find one entity, remove it and commit the transaction
 
 <pre>
 withTrxAndCommit {
- findAndApply(classOf[User], id ) {
-   u => remove(u)
+ findAndApply(id ) {
+   u:User => remove(u)
  }
 }
 </pre>
@@ -148,8 +148,8 @@ _exceptionWrapper_ and _checkAccessRights_ are used to generate WebApplicationEx
    exceptionWrapper {
      checkAccessRights {
        withTrxAndCommit {
-         findAndApply(classOf[User], id(uid) ) {
-           u =>
+         findAndApply(id(uid) ) {
+           u:User =>
              val userInfoId = u.getUserInfo.getId
              val newUserInfo: UserInfo = eui.getUserInfo
              newUserInfo.setId(userInfoId)
@@ -185,7 +185,7 @@ withNoTrx {
 	myFilter.creatorId = BigInteger.valueOf(815)
 	myFilter.nameTxt = "Test1"
 
-	val result = createFilterQuery(myFilter).getResultList
+	val result = createFilterQuery[ObjectItem](myFilter).getResultList
 	result.size must_== 1
 }
 </pre>
