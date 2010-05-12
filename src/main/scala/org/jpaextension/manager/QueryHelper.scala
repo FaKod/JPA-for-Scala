@@ -36,10 +36,10 @@ trait QueryHelper {
    * @param id ref to id instance (primary key)
    * @return A return value of the applied function
    */
-  protected def findAndApply[T:ClassManifest, A](id: AnyRef)(f: T => A) = {
+  protected def findAndApply[T: ClassManifest, A](id: AnyRef)(f: T => A) = {
     val m = implicitly[ClassManifest[T]]
-    
-    find[T](m.erasure.asInstanceOf[Class[T]], id) match {
+
+    find[T](id) match {
       case None => throw new JPAExtensionException("Entity: " + m.erasure.asInstanceOf[Class[T]] + " not found with parameter: " + id)
       case Some(u) => {
         refresh(u.asInstanceOf[AnyRef])
@@ -48,34 +48,20 @@ trait QueryHelper {
     }
   }
 
-  /**
-   * finds and entity with id and returns it
-   * @see findAndApply no need to apply a function
-   * usage example: (ObjectItem is the type of the Entity)
-   * <code>
-   * val item = find[ObjectItem](id)
-   * <code>
-   * @param T return type of entity
-   * @param id ref to id instance (primary key)
-   * @return T instance of Class c
-   */
-  protected def find[T:ClassManifest](id: AnyRef): T =
-    findAndApply[T,T](id)(x => x)
-
 
   /**
    * creates a simple query for one entity and query parameter list
    * @param ( ( T ) =>A) function to be applied
    * @return A return value of the applied function
    */
-  protected def oneResultQueryAndApply[A, T:ClassManifest](body: (T) => A): DoWithQuery[A, T] =
+  protected def oneResultQueryAndApply[A, T: ClassManifest](body: (T) => A): DoWithQuery[A, T] =
     new DoWithQuery[A, T](body)
 
   /**
    * creates a simple query without closure
    * @return A return value of the applied function
    */
-  protected def oneResultQuery[A, T:ClassManifest]: DoWithQuery[A, T] =
+  protected def oneResultQuery[A, T: ClassManifest]: DoWithQuery[A, T] =
     new DoWithQuery[A, T]({x: T => x.asInstanceOf[A]})
 
   /**
@@ -83,7 +69,7 @@ trait QueryHelper {
    * @param ( ( T ) =>Unit) function to be applies on each element
    * @return Unit
    */
-  protected def forQueryResults[T:ClassManifest](body: (T) => Unit): DoWithForQuery[T] =
+  protected def forQueryResults[T: ClassManifest](body: (T) => Unit): DoWithForQuery[T] =
     new DoWithForQuery[T](body)
 
 
@@ -120,7 +106,7 @@ trait QueryHelper {
   /**
    * class for one result queries
    */
-  protected class DoWithQuery[A, T:ClassManifest](body: (T) => A) extends DoWithQueryBase {
+  protected class DoWithQuery[A, T: ClassManifest](body: (T) => A) extends DoWithQueryBase {
 
     /**
      * doing Query
@@ -221,7 +207,7 @@ trait QueryHelper {
   /**
    * see forResults (for more than one result)
    */
-  protected class DoWithForQuery[T:ClassManifest](body: (T) => Unit) extends DoWithQueryBase {
+  protected class DoWithForQuery[T: ClassManifest](body: (T) => Unit) extends DoWithQueryBase {
 
     /**
      * doing Query
@@ -290,7 +276,7 @@ trait QueryHelper {
    * creates query using filter object
    * @param filter instance of filter object
    */
-  def createFilterQuery[T:ClassManifest](filter: AnyRef) = {
+  def createFilterQuery[T: ClassManifest](filter: AnyRef) = {
     val m = implicitly[ClassManifest[T]]
 
     /**

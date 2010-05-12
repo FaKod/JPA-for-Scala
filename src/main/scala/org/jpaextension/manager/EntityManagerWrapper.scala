@@ -41,14 +41,14 @@ trait EntityManagerWrapper {
    * singleton instance of ScalaEntityManager, or they could simply
    * set up a val to hold the current instance.
    */
-  protected def em : EntityManager
+  protected def em: EntityManager
 
   /**
    * This val should hold a reference to the factory that created
    * this instance, so that the proper closeEM method can be called
    * on shutdown.
    */
-  protected def factory : EntityManagerFactory
+  protected def factory: EntityManagerFactory
 
   /**
    * <p>
@@ -70,7 +70,7 @@ trait EntityManagerWrapper {
    * @return A List[A] representing the results of the query
    *
    */
-  def findAll[A](queryName : String, params : Pair[String,Any]*) = createAndParamify[A](queryName, params).findAll
+  def findAll[A](queryName: String, params: Pair[String, Any]*) = createAndParamify[A](queryName, params).findAll
 
   /**
    * Creates a QueryWrapper representing the given named query with the given
@@ -90,13 +90,13 @@ trait EntityManagerWrapper {
    *
    * @return The created QueryWrapper[A]
    */
-  def createNamedQuery[A](queryName : String, params : Pair[String,Any]*) : QueryWrapper[A] = createAndParamify[A](queryName,params)
+  def createNamedQuery[A](queryName: String, params: Pair[String, Any]*): QueryWrapper[A] = createAndParamify[A](queryName, params)
 
   /*
    * Worker for the previous two methods to handle creating
    * the query and then setting the parameters.
    */
-  private def createAndParamify[A](queryName : String, params : Seq[Pair[String,Any]]) : QueryWrapper[A] = {
+  private def createAndParamify[A](queryName: String, params: Seq[Pair[String, Any]]): QueryWrapper[A] = {
     val q = createNamedQuery[A](queryName)
     params.foreach(param => q.setParameter(param._1, param._2))
     q
@@ -111,7 +111,7 @@ trait EntityManagerWrapper {
    *
    * @param entity The entity to persist.
    */
-  def persistAndFlush(entity : AnyRef) = { em.persist(entity); em.flush() }
+  def persistAndFlush(entity: AnyRef) = {em.persist(entity); em.flush()}
 
   /**
    * Handles a merge and flush in a single method. This is useful if your
@@ -123,7 +123,7 @@ trait EntityManagerWrapper {
    * @return A newly merged copy of the entity. The original entity should
    * be discarded.
    */
-  def mergeAndFlush[T](entity : T) : T = {val e = merge(entity); em.flush(); e}
+  def mergeAndFlush[T](entity: T): T = {val e = merge(entity); em.flush(); e}
 
   /**
    * Handles a remove and flush in a single method. This is useful if your
@@ -132,7 +132,7 @@ trait EntityManagerWrapper {
    *
    * @param entity The entity to remove.
    */
-  def removeAndFlush(entity : AnyRef) = { em.remove(entity); em.flush() }
+  def removeAndFlush(entity: AnyRef) = {em.remove(entity); em.flush()}
 
   // methods defined on Entity Manager
 
@@ -159,18 +159,20 @@ trait EntityManagerWrapper {
    * Attempts to load a given entity based on its ID. Returns an Option,
    * with None indicating that no entity exists with the given ID.
    *
-  * @param clazz The class of the entity to load
-  * @param id The ID of the entity to load
-  *
-  * @return An Option with the loaded entity (Some) or None to indicate
-  * that an entity could not be loaded
-  */
-  def find[A](clazz: Class[A], id: Any) = Utils.findToOption(em.find[A](clazz, id).asInstanceOf[A])
+   * @param id The ID of the entity to load
+   *
+   * @return An Option with the loaded entity (Some) or None to indicate
+   * that an entity could not be loaded
+   */
+  def find[A: ClassManifest](id: Any) = {
+    val m = implicitly[ClassManifest[A]]
+    Utils.findToOption(em.find[A](m.erasure.asInstanceOf[Class[A]], id).asInstanceOf[A])
+  }
 
   /**
    * Forces a flush of the current entity state to the database.
    */
-  //def flush() = em.flush() //@TODO solve override issue
+  // def flush() = em.flush() //@TODO solve override issue
 
   /**
    * Sets the flush mode for the EntityManager.
@@ -214,9 +216,9 @@ trait EntityManagerWrapper {
    */
   def createNamedQuery[A](queryName: String) = new QueryWrapper[A](em.createNamedQuery(queryName))
 
-  /**
-   * Creates a new QueryWrapper[A] using the given native SQL query. For more
-   * details on using native queries, see <a href="http://www.hibernate.org/hib_docs/entitymanager/reference/en/html/query_native.html">http://www.hibernate.org/hib_docs/entitymanager/reference/en/html/query_native.html</a>.
+  /** 
+   * Create an instance of QueryWrapper[A] for executing
+   * a native SQL statement, e.g., for update or delete.
    *
    * @param sqlString The query string to use
    * @return A new QueryWrapper[A] that uses the given native SQL
@@ -224,14 +226,15 @@ trait EntityManagerWrapper {
   def createNativeQuery[A](sqlString: String) = new QueryWrapper[A](em.createNativeQuery(sqlString))
 
   /**
-   * Creates a new QueryWrapper[A] using the given native SQL query. For more
-   * details on using native queries, see <a href="http://www.hibernate.org/hib_docs/entitymanager/reference/en/html/query_native.html">http://www.hibernate.org/hib_docs/entitymanager/reference/en/html/query_native.html</a>.
-   *
+   * Create an instance of QueryWrapper[A] for executing
+   * a native SQL query.
    * @param sqlString The query string to use
-   * @param clazz The class of the returned entities
    * @return A new QueryWrapper[A] that uses the given native SQL
    */
-  def createNativeQuery[A](sqlString: String, clazz: Class[A]) = new QueryWrapper[A](em.createNativeQuery(sqlString, clazz))
+  def createNativeQueryWithResultClass[A: ClassManifest](sqlString: String) = {
+    val m = implicitly[ClassManifest[A]]
+    new QueryWrapper[A](em.createNativeQuery(sqlString, m.erasure.asInstanceOf[Class[A]]))
+  }
 
   /**
    * Creates a new QueryWrapper[A] using the given native SQL query. For more
@@ -289,12 +292,14 @@ trait EntityManagerWrapper {
    * if no corresponding instance exists in the database. The exception
    * may be thrown when getReference is called.
    *
-   * @param clazz The class of the instance
    * @param primaryKey The primary key of the instance
    *
    * @return A lazily fetched instance
    */
-  def getReference[A](clazz: Class[A], primaryKey: Any) = em.getReference[A](clazz, primaryKey)
+  def getReference[A: ClassManifest](primaryKey: Any) = {
+    val m = implicitly[ClassManifest[A]]
+    em.getReference[A](m.erasure.asInstanceOf[Class[A]], primaryKey)
+  }
 
   /**
    * Locks the given entity using the given lock mode.
