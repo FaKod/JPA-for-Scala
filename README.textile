@@ -1,8 +1,8 @@
 h1. The Idea
 
-See this "BLOG-post":http://blog.fakod.eu/?p=855 as well
+See this "post":http://blog.fakod.eu/?p=855 as well
 My "Blog":http://blog.fakod.eu/
-Follow me on Twitter http://twitter.com/fakod
+Follow me on "Twitter":http://twitter.com/fakod
 ----
 
 JPAExtension (JPA For Scala) is based on 
@@ -16,6 +16,3 @@ The JPA Extension should support
 * "Acegi":http://www.acegisecurity.org/ integration
 * Domain value check (-> "JDBCluster: Domains":http://fakod.eu/wiki/index.php?title=JDBCluster#Domains_for_Attributes) using "Bean Validation":http://www.jcp.org/en/jsr/detail?id=303
 * all this provided as Scala library
-
-
-
