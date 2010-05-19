@@ -1,6 +1,6 @@
 h1. The Idea
 
-See this "post":http://blog.fakod.eu/?p=855 as well
+See this "JPA-for-Scala-Post":http://blog.fakod.eu/?p=855 as well
 My "Blog":http://blog.fakod.eu/
 Follow me on "Twitter":http://twitter.com/fakod
 ----
