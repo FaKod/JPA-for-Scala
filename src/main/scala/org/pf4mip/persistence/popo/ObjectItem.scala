@@ -13,8 +13,9 @@ import java.lang.Long
 
 @Entity
 @Table(name = "obj_item")
+@Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "obj_item_id_seq", sequenceName = "obj_item_id_seq", allocationSize = 1)
-class ObjectItem {
+class ObjectItem extends MIPEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "obj_item_id_seq")
   @Column(name = "obj_item_id", nullable = false, length = 20)
@@ -29,11 +30,11 @@ class ObjectItem {
   @BeanProperty
   var nameTxt: String = _
 
-  @Column(name = "creator_id", nullable = false, length = 20)
-  @BeanProperty
-  var creatorId: BigInteger = _
-
-  @Column(name = "update_seqnr", nullable = false, length = 15)
-  @BeanProperty
-  var updateSeqNr: Long = _
+//  @Column(name = "creator_id", nullable = false, length = 20)
+//  @BeanProperty
+//  var creatorId: BigInteger = _
+//
+//  @Column(name = "update_seqnr", nullable = false, length = 15)
+//  @BeanProperty
+//  var updateSeqNr: Long = _
 }
