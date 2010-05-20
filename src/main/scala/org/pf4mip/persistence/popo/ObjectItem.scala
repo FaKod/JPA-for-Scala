@@ -29,12 +29,4 @@ class ObjectItem extends MIPEntity {
   @Column(name = "name_txt", nullable = false, length = 100)
   @BeanProperty
   var nameTxt: String = _
-
-//  @Column(name = "creator_id", nullable = false, length = 20)
-//  @BeanProperty
-//  var creatorId: BigInteger = _
-//
-//  @Column(name = "update_seqnr", nullable = false, length = 15)
-//  @BeanProperty
-//  var updateSeqNr: Long = _
 }

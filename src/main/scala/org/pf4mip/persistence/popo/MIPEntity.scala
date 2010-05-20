@@ -12,7 +12,7 @@ import java.lang.Long
  */
 
 @MappedSuperclass
-//@EntityListeners(Array(classOf[MIPEntityInterceptor]))
+@EntityListeners(Array(classOf[MIPEntityInterceptor]))
 class MIPEntity {
   @Column(name = "creator_id", nullable = false, length = 20)
   @BeanProperty

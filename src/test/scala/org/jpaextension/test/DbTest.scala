@@ -29,7 +29,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
         item.setNameTxt("Test1")
         item.setObjItemCatCode("NKN")
         item.setUpdateSeqNr(1)
-        item.setCreatorId(BigInteger.valueOf(815))
+        item.setCreatorId(BigInteger.valueOf(1234)) // will be overwritten by interceptor
 
         persist(item)
       }
