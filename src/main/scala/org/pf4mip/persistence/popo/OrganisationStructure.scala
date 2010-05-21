@@ -11,11 +11,11 @@ import reflect.BeanProperty
  */
 
 @Entity
-@Access(AccessType.PROPERTY)
+//@Access(AccessType.PROPERTY)
 @Table(name = "org_struct")
-@IdClass(classOf[OrganisationStructure#OrganisationStructureId])
+@IdClass(classOf[OrganisationStructureId])
 @SequenceGenerator(name = "obj_item_id_seq", sequenceName = "obj_item_id_seq", allocationSize = 1)
-class OrganisationStructure {
+class OrganisationStructure extends MIPEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "obj_item_id_seq")
   @Column(name = "org_struct_ix", nullable = false, length = 20)
@@ -31,35 +31,33 @@ class OrganisationStructure {
   @Column(name = "name_txt", length = 100)
   @BeanProperty
   protected var nameTxt: String = _
+}
 
-  @Access(AccessType.PROPERTY)
-  class OrganisationStructureId {
-    @BeanProperty
-    var orgStructRootOrg: BigInteger = _
-    @BeanProperty
-    var ix: BigInteger = _
+//@Access(AccessType.PROPERTY)
+class OrganisationStructureId {
+  @BeanProperty
+  var orgStructRootOrg: BigInteger = _
+  @BeanProperty
+  var ix: BigInteger = _
 
-    override def equals(obj: Any): Boolean = {
-      val o = obj.asInstanceOf[AnyRef]
-      if (this == o) return true
-      if (o == null || getClass() != o.getClass) return false
+  override def equals(obj: Any): Boolean = {
+    val o = obj.asInstanceOf[AnyRef]
+    if (this == o) return true
+    if (o == null || getClass() != o.getClass) return false
 
-      val that = o.asInstanceOf[OrganisationStructureId]
+    val that = o.asInstanceOf[OrganisationStructureId]
 
-      ix match {
-        case null => if (that.ix != null) return false
-        case x => if (!x.equals(that.ix)) return false
-      }
-
-      if (orgStructRootOrg == null)
-        (that.orgStructRootOrg == null) else orgStructRootOrg.equals(that.orgStructRootOrg)
+    ix match {
+      case null => if (that.ix != null) return false
+      case x => if (!x.equals(that.ix)) return false
     }
 
-    override def hashCode = {
-      val result = if (orgStructRootOrg != null) orgStructRootOrg.hashCode else 0
-      31 * result + (if (ix != null) ix.hashCode else 0)
-    }
+    if (orgStructRootOrg == null)
+      (that.orgStructRootOrg == null) else orgStructRootOrg.equals(that.orgStructRootOrg)
   }
 
-
+  override def hashCode = {
+    val result = if (orgStructRootOrg != null) orgStructRootOrg.hashCode else 0
+    31 * result + (if (ix != null) ix.hashCode else 0)
+  }
 }
