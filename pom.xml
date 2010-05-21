@@ -6,12 +6,33 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>JPAExtension</groupId>
-    <artifactId>JPAExtension-core</artifactId>
-    <version>0.0.1</version>
+    <groupId>org.scala-libs</groupId>
+    <artifactId>jpaextension</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <inceptionYear>2010</inceptionYear>
     <packaging>jar</packaging>
 
-    <name>Java Persistence Extension Core</name>
+    <name>Java Persistence Extension</name>
+
+    <distributionManagement>
+        <repository>
+            <id>scala-tools.org</id>
+            <url>http://nexus.scala-tools.org/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>scala-tools.org</id>
+            <url>http://nexus.scala-tools.org/content/repositories/snapshots</url>
+            <uniqueVersion>true</uniqueVersion>
+        </snapshotRepository>
+        <site>
+            <id>scala-tools.org</id>
+            <url>http://nexus.scala-tools.org/content/repositories/mvnsites/${project.artifactId}</url>
+        </site>
+    </distributionManagement>
+
+    <description>
+        Extended JPA / ORM / persistence layer for Scala to ease JPA 2.0 development.
+    </description>
 
     <dependencies>
         <dependency>
