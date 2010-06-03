@@ -34,6 +34,26 @@
         Extended JPA / ORM / persistence layer for Scala to ease JPA 2.0 development.
     </description>
 
+    <licenses>
+        <license>
+            <name>the Apache License, ASL Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>FaKod</id>
+            <name>Christopher Schmidt</name>
+            <timezone>+1</timezone>
+            <email>info [at] FaKod.EU</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -49,6 +69,7 @@
             <groupId>org.scala-tools.testing</groupId>
             <artifactId>specs_2.8.0.RC2</artifactId>
             <version>1.6.5-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -59,6 +80,7 @@
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.0.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javassist</groupId>
@@ -69,11 +91,13 @@
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>8.4-701.jdbc4</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
