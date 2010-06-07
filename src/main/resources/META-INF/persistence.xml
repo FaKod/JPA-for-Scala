@@ -62,11 +62,15 @@
             <property name="openjpa.DataCache" value="false"/>
             <!--property name="openjpa.DynamicEnhancementAgent" value="true" /-->
             <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
-            <property name="openjpa.jdbc.Schema" value="test"/>
-            <property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>
-            <!--<property name="openjpa.Log" value="SQL=TRACE"/>-->
+            <!--property name="openjpa.jdbc.Schema" value="test"/-->
+            <!--property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/-->
+
+            <!--property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='dropDB,add')"/-->
+
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='drop,add',IgnoreErrors=true)"/>
+
             <!--property name="openjpa.jdbc.MappingDefaults" value="FieldStrategies='java.util.Calendar=pf4mip.persistence.mapping.CalendarValueHandler'"/-->
-            <property name="openjpa.DetachState" value="fetch-groups(DetachedStateField=true, DetachedStateManager=true, AccessUnloaded=false)" />
+            <!--property name="openjpa.DetachState" value="fetch-groups(DetachedStateField=true, DetachedStateManager=true, AccessUnloaded=false)" /-->
             <property name="openjpa.Log" value="SQL=TRACE"/>
         </properties>
     </persistence-unit>
