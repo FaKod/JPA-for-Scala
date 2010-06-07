@@ -14,10 +14,10 @@ import reflect.BeanProperty
 //@Access(AccessType.PROPERTY)
 @Table(name = "org_struct")
 @IdClass(classOf[OrganisationStructureId])
-@SequenceGenerator(name = "obj_item_id_seq", sequenceName = "obj_item_id_seq", allocationSize = 1)
+@SequenceGenerator(name = "org_struct_index_seq", sequenceName = "org_struct_index_seq", allocationSize = 1)
 class OrganisationStructure extends MIPEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "obj_item_id_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "org_struct_index_seq")
   @Column(name = "org_struct_ix", nullable = false, length = 20)
   @BeanProperty
   protected var ix: BigInteger = _
