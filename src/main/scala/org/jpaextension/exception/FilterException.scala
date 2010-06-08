@@ -20,9 +20,9 @@ package org.jpaextension.exception
  * Filter Exception thrown on filter errors
  */
 
-class FilterException(errorText:String) extends Throwable
+class FilterException(errorText:String) extends Throwable(errorText)
 
 /**
  * thrown on common JPAExtension exceptions
  */
-class JPAExtensionException(errorText:String) extends Throwable
+class JPAExtensionException(errorText:String) extends Throwable(errorText)
