@@ -18,11 +18,11 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
 
   def getPersistenceUnitName = "mip"
 
-  "JPAExtension" should {
-
-    "return D all and C one OI" in {
-
-      withTrxAndCommit {
+  /**
+   * init DB Content with one Object Item
+   */
+  def intitDBcontent = {
+    withTrxAndCommit {
         createQuery("Delete from ObjectItem") executeUpdate
 
         val item = new ObjectItem()
@@ -33,14 +33,18 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
 
         persist(item)
       }
+  }
 
+  "JPAExtension" should { intitDBcontent.before
+
+    "return OI with query: Select oi from ObjectItem oi" in {
       withNoTrx {
         val result = createQuery[ObjectItem]("Select oi from ObjectItem oi").getResultList
         result.size must_== 1
       }
     }
 
-    "Scala Filter should return one filtered ObjectItem instance" in {
+    "use Scala-Filter-Object MyOIQuery and return one filtered ObjectItem instance" in {
 
       withNoTrx {
         val MyFilter: SomeFilter = newFilterInstance(QueryId("MyOIQuery"))
@@ -54,7 +58,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
 
     }
 
-    "Java Filter should return one filtered ObjectItem instance" in {
+    "use Java-Filter-Object and return one filtered ObjectItem instance" in {
 
       withNoTrx {
         val MyFilter: SomeJavaTestFilter = newFilterInstance(QueryId("MyOIQuery2"))

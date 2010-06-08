@@ -15,14 +15,31 @@ import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerFa
 
 class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
   def getPersistenceUnitName = "mip"
+
+  /**
+   * init DB Content with 20 Object Item
+   */
+  def intitDBcontent = {
+    var ids = new Queue[BigInteger]()
+    withTrxAndCommit {
+      createQuery("Delete from ObjectItem") executeUpdate
+
+      for (i <- 1 to 20) {
+        val item = new ObjectItem()
+        item.setNameTxt("Test:" + i)
+        item.setObjItemCatCode("NKN")
+        item.setUpdateSeqNr(i)
+        item.setCreatorId(BigInteger.valueOf(i))
+        persist(item)
+        ids.enqueue(item.getId)
+      }
+    }
+    ids
+  }
   "A Query" should {
 
-    setSequential()
-
-    shareVariables()
-    var ids = new Queue[BigInteger]()
-
-    "create Object Items" in {
+    "find an entity" in {
+      var ids = new Queue[BigInteger]()
       withTrxAndCommit {
         createQuery("Delete from ObjectItem") executeUpdate
 
@@ -36,9 +53,6 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
           ids.enqueue(item.getId)
         }
       }
-    }
-
-    "find an entity" in {
       ids.foreach {
         id =>
           val item = find[ObjectItem](id).get
@@ -47,6 +61,20 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "find an entity and apply" in {
+      var ids = new Queue[BigInteger]()
+      withTrxAndCommit {
+        createQuery("Delete from ObjectItem") executeUpdate
+
+        for (i <- 1 to 20) {
+          val item = new ObjectItem()
+          item.setNameTxt("Test:" + i)
+          item.setObjItemCatCode("NKN")
+          item.setUpdateSeqNr(i)
+          item.setCreatorId(BigInteger.valueOf(i))
+          persist(item)
+          ids.enqueue(item.getId)
+        }
+      }
       ids.foreach {
         id =>
           findAndApply(id) {
@@ -57,6 +85,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a one/first-only-result native query" in {
+      val ids = intitDBcontent
       var i: Long = 0
       oneResultQueryAndApply {
         count: Long =>
@@ -66,6 +95,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a one/first-only-result QueryId query" in {
+      val ids = intitDBcontent
       var i = 0
       oneResultQueryAndApply {
         oi: ObjectItem =>
@@ -75,6 +105,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a Query and apply f on results" in {
+      val ids = intitDBcontent
       var i = 0
       forQueryResults {
         oi: ObjectItem =>
