@@ -40,7 +40,7 @@ trait QueryHelper {
     val m = implicitly[ClassManifest[T]]
 
     find[T](id) match {
-      case None => throw new JPAExtensionException("Entity: " + m.erasure.asInstanceOf[Class[T]] + " not found with parameter: " + id)
+      case None => throw new JPAExtensionException("Entity: " + m.erasure.getName + " not found with parameter: " + id)
       case Some(u) => {
         refresh(u.asInstanceOf[AnyRef])
         f(u)
