@@ -1,7 +1,7 @@
 package org.pf4mip.persistence.popo
 
 import javax.persistence.{Column, Entity, Table, PrimaryKeyJoinColumn}
-import java.math.BigInteger
+import reflect.BeanProperty
 
 /**
  * User: FaKod
@@ -13,5 +13,6 @@ import java.math.BigInteger
 @PrimaryKeyJoinColumn(name = "org_id")
 class Organisation extends ObjectItem {
   @Column(name = "cat_code", length = 6, nullable = false)
-  protected var orgCatCode: String = _
+  @BeanProperty
+  var orgCatCode: String = _
 }
