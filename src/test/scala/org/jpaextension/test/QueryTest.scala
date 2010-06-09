@@ -14,13 +14,16 @@ import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerFa
  */
 
 class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
+
   def getPersistenceUnitName = "mip"
+
+  var ids:Queue[BigInteger] = _
 
   /**
    * init DB Content with 20 Object Item
    */
-  def intitDBcontent = {
-    var ids = new Queue[BigInteger]()
+  def initDBcontent = {
+    ids = new Queue[BigInteger]()
     withTrxAndCommit {
       createQuery("Delete from ObjectItem") executeUpdate
 
@@ -34,12 +37,11 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
         ids.enqueue(item.getId)
       }
     }
-    ids
   }
-  "A Query" should {
+  "A Query" should { initDBcontent.before
 
     "find an entity" in {
-      intitDBcontent.foreach {
+      ids.foreach {
         id =>
           val item = find[ObjectItem](id).get
           item.getId must_== id
@@ -47,7 +49,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "find an entity and apply" in {
-      intitDBcontent.foreach {
+      ids.foreach {
         id =>
           findAndApply(id) {
             oi: ObjectItem =>
@@ -57,7 +59,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a one/first-only-result native query" in {
-      val ids = intitDBcontent
+      initDBcontent
       var i: Long = 0
       oneResultQueryAndApply {
         count: Long =>
@@ -67,7 +69,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a one/first-only-result QueryId query" in {
-      val ids = intitDBcontent
+      initDBcontent
       var i = 0
       oneResultQueryAndApply {
         oi: ObjectItem =>
@@ -77,7 +79,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a Query and apply f on results" in {
-      val ids = intitDBcontent
+      initDBcontent
       var i = 0
       forQueryResults {
         oi: ObjectItem =>

@@ -21,7 +21,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
   /**
    * init DB Content with one Object Item
    */
-  def intitDBcontent = {
+  def initDBcontent = {
     withTrxAndCommit {
         createQuery("Delete from ObjectItem") executeUpdate
 
@@ -34,7 +34,7 @@ class DbTest extends SpecificationWithJUnit with UsesEntityManager with QueryHel
       }
   }
 
-  "JPAExtension" should { intitDBcontent.before
+  "JPAExtension" should { initDBcontent.before
 
     "return OI with query: Select oi from ObjectItem oi" in {
       withNoTrx {
