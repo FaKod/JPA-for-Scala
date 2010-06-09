@@ -111,7 +111,7 @@ trait EntityManagerWrapper {
    *
    * @param entity The entity to persist.
    */
-  def persistAndFlush(entity: AnyRef) = {em.persist(entity); em.flush()}
+  def persistAndFlush(entity: AnyRef):Unit = {em.persist(entity); em.flush()}
 
   /**
    * Handles a merge and flush in a single method. This is useful if your
@@ -132,7 +132,7 @@ trait EntityManagerWrapper {
    *
    * @param entity The entity to remove.
    */
-  def removeAndFlush(entity: AnyRef) = {em.remove(entity); em.flush()}
+  def removeAndFlush(entity: AnyRef):Unit = {em.remove(entity); em.flush()}
 
   // methods defined on Entity Manager
 
@@ -140,7 +140,7 @@ trait EntityManagerWrapper {
    * Persists the given entity.
    * @param entity The entity to persist
    */
-  def persist(entity: AnyRef) = em.persist(entity)
+  def persist(entity: AnyRef):Unit = em.persist(entity)
 
   /**
    * Merges the given entity and returns the newly merged copy.
@@ -153,7 +153,7 @@ trait EntityManagerWrapper {
    * Removes the given entity.
    * @param entity The entity to remove
    */
-  def remove(entity: AnyRef) = em.remove(entity);
+  def remove(entity: AnyRef):Unit = em.remove(entity);
 
   /**
    * Attempts to load a given entity based on its ID. Returns an Option,
@@ -180,7 +180,7 @@ trait EntityManagerWrapper {
    * @param flushModeType The desired flush mode
    * @see javax.persistence.FlushModeType
    */
-  def setFlushMode(flushModeType: FlushModeType) = em.setFlushMode(flushModeType)
+  def setFlushMode(flushModeType: FlushModeType):Unit = em.setFlushMode(flushModeType)
 
   /**
    * Reloads a given entity's state from the database, effectively
@@ -188,7 +188,7 @@ trait EntityManagerWrapper {
    *
    * @param entity The entity to refresh
    */
-  def refresh(entity: AnyRef) = em.refresh(entity)
+  def refresh(entity: AnyRef):Unit = em.refresh(entity)
 
   /**
    * Returns the current flush mode for the EntityManager
@@ -270,13 +270,13 @@ trait EntityManagerWrapper {
    * Joins the EM to the currently open JTA transaction. Note that this
    * throws and exception if no JTA transaction exists.
    */
-  def joinTransaction() = em.joinTransaction()
+  def joinTransaction():Unit = em.joinTransaction()
 
   /**
    * Clears the persistence context. Changes made to any entities that have
    * not been flushed to the database will not be persisted.
    */
-  def clear() = em.clear()
+  def clear():Unit = em.clear()
 
   /**
    * Returns the underlying provider object for the EntityManager.
@@ -309,7 +309,7 @@ trait EntityManagerWrapper {
    *
    * @see javax.persistence.LockModeType
    */
-  def lock(entity: AnyRef, lockMode: LockModeType) = em.lock(entity, lockMode)
+  def lock(entity: AnyRef, lockMode: LockModeType):Unit = em.lock(entity, lockMode)
 
   /**
    * Tests to see if the given entity is attached to the current
