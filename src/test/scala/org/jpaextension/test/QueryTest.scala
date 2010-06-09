@@ -30,7 +30,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
         item.setObjItemCatCode("NKN")
         item.setUpdateSeqNr(i)
         item.setCreatorId(BigInteger.valueOf(i))
-        persist(item)
+        persistAndFlush(item)
         ids.enqueue(item.getId)
       }
     }
@@ -39,21 +39,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
   "A Query" should {
 
     "find an entity" in {
-      var ids = new Queue[BigInteger]()
-      withTrxAndCommit {
-        createQuery("Delete from ObjectItem") executeUpdate
-
-        for (i <- 1 to 20) {
-          val item = new ObjectItem()
-          item.setNameTxt("Test:" + i)
-          item.setObjItemCatCode("NKN")
-          item.setUpdateSeqNr(i)
-          item.setCreatorId(BigInteger.valueOf(i))
-          persist(item)
-          ids.enqueue(item.getId)
-        }
-      }
-      ids.foreach {
+      intitDBcontent.foreach {
         id =>
           val item = find[ObjectItem](id).get
           item.getId must_== id
@@ -61,21 +47,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "find an entity and apply" in {
-      var ids = new Queue[BigInteger]()
-      withTrxAndCommit {
-        createQuery("Delete from ObjectItem") executeUpdate
-
-        for (i <- 1 to 20) {
-          val item = new ObjectItem()
-          item.setNameTxt("Test:" + i)
-          item.setObjItemCatCode("NKN")
-          item.setUpdateSeqNr(i)
-          item.setCreatorId(BigInteger.valueOf(i))
-          persist(item)
-          ids.enqueue(item.getId)
-        }
-      }
-      ids.foreach {
+      intitDBcontent.foreach {
         id =>
           findAndApply(id) {
             oi: ObjectItem =>
