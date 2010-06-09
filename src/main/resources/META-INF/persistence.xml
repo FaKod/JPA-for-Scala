@@ -63,7 +63,9 @@
             <!--property name="openjpa.DynamicEnhancementAgent" value="true" /-->
             <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
 
-            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='drop,add')"/>
+            <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict"/>
+
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='refresh,deleteTableContents')"/>
 
             <!--property name="openjpa.jdbc.MappingDefaults" value="FieldStrategies='java.util.Calendar=pf4mip.persistence.mapping.CalendarValueHandler'"/-->
             <!--property name="openjpa.DetachState" value="fetch-groups(DetachedStateField=true, DetachedStateManager=true, AccessUnloaded=false)" /-->
