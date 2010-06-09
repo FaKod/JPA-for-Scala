@@ -3,7 +3,6 @@ package org.pf4mip.persistence.popo
 import java.math.BigInteger
 import javax.persistence._
 import reflect.BeanProperty
-import java.lang.Long
 
 /**
  * User: FaKod
@@ -14,7 +13,7 @@ import java.lang.Long
 @Entity
 @Table(name = "obj_item")
 @Inheritance(strategy = InheritanceType.JOINED)
-@SequenceGenerator(name = "obj_item_id_seq", sequenceName = "obj_item_id_seq", allocationSize = 1)
+@SequenceGenerator(name = "obj_item_id_seq", sequenceName = "obj_item_id_sequence", allocationSize = 1)
 class ObjectItem extends MIPEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "obj_item_id_seq")

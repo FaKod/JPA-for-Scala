@@ -14,7 +14,7 @@ import reflect.BeanProperty
 //@Access(AccessType.PROPERTY)
 @Table(name = "org_struct")
 @IdClass(classOf[OrganisationStructureId])
-@SequenceGenerator(name = "org_struct_index_seq", sequenceName = "org_struct_index_seq", allocationSize = 1)
+@SequenceGenerator(name = "org_struct_index_seq", sequenceName = "org_struct_index_sequence", allocationSize = 1)
 class OrganisationStructure extends MIPEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "org_struct_index_seq")
