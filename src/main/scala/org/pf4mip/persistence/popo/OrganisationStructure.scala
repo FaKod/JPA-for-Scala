@@ -11,7 +11,6 @@ import reflect.BeanProperty
  */
 
 @Entity
-//@Access(AccessType.PROPERTY)
 @Table(name = "org_struct")
 @IdClass(classOf[OrganisationStructureId])
 @SequenceGenerator(name = "org_struct_index_seq", sequenceName = "org_struct_index_sequence", allocationSize = 1)
@@ -33,7 +32,10 @@ class OrganisationStructure extends MIPEntity {
   protected var nameTxt: String = _
 }
 
-//@Access(AccessType.PROPERTY)
+
+/**
+ * ID Class
+ */
 class OrganisationStructureId {
   @BeanProperty
   var orgStructRootOrg: BigInteger = _
