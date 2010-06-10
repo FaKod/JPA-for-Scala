@@ -101,7 +101,7 @@
                 </configuration>
             </plugin>
 
-            <!--plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
                 <version>1.0</version>
@@ -135,7 +135,7 @@
                         <version>1.0</version>
                     </dependency>
                 </dependencies>
-            </plugin-->
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
