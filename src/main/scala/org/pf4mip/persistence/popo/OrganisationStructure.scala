@@ -42,9 +42,9 @@ class OrganisationStructureId {
   @BeanProperty
   var ix: BigInteger = _
 
-  override def equals(obj: Any): Boolean = {
+  override def equals(obj: Any): Boolean = { //TODO change this awesome method
     val o = obj.asInstanceOf[AnyRef]
-    if (this == o) return true
+    //if (this == o) return true
     if (o == null || getClass() != o.getClass) return false
 
     val that = o.asInstanceOf[OrganisationStructureId]
