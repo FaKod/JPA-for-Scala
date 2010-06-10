@@ -11,7 +11,7 @@
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>Java Persistence Extension Core</name>
+    <name>Scala Persistence Extension Core</name>
 
     <dependencies>
         <dependency>
@@ -29,16 +29,6 @@
             <artifactId>specs_2.8.0.RC3</artifactId>
             <version>1.6.5-SNAPSHOT</version>
         </dependency>
-        <!--dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>2.0.0</version>
-        </dependency-->
         <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
@@ -77,9 +67,7 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
+
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
@@ -94,17 +82,9 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.1</version>
                 <configuration>
                     <includes>pf4mip/persistence/popo/*.class</includes>
                 </configuration>
@@ -122,17 +102,6 @@
                         <groupId>org.apache.openjpa</groupId>
                         <artifactId>openjpa</artifactId>
                         <version>2.0.0</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>org.apache.geronimo.specs</groupId>
-                                <artifactId>geronimo-jpa_2.0_spec</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.geronimo.specs</groupId>
-                        <artifactId>geronimo-jpa_2.0_spec</artifactId>
-                        <version>1.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -141,6 +110,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
+                    <excludes>
+                        <exclude>org/pf4mip/</exclude>
+                        <exclude>META-INF/</exclude>
+                    </excludes>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
@@ -157,8 +130,6 @@
 
         <sourceDirectory>src/main/scala</sourceDirectory>
         <testSourceDirectory>src/test/scala</testSourceDirectory>
-
-
     </build>
 
     <repositories>
@@ -170,6 +141,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        
         <repository>
             <id>scala-tools.snapshots</id>
             <name>Scala-Tools Dependencies Repository for Snapshots</name>
@@ -177,18 +149,12 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
-            <snapshots>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
         </repository>
+        
         <repository>
             <id>apache-snapshots</id>
             <url>http://people.apache.org/repo/m2-snapshot-repository</url>
         </repository>
-        <!--repository>
-            <id>EclipseLink Repo</id>
-            <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-        </repository-->
     </repositories>
 
 </project>
