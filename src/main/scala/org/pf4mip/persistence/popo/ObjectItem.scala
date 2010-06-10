@@ -5,9 +5,10 @@ import javax.persistence._
 import reflect.BeanProperty
 
 /**
- * User: FaKod
- * Date: 20.05.2010
- * Time: 06:42:49
+ * uses inheritance strategy joined
+ * uses a sequence for primary key
+ * 
+ * @author Christopher Schmidt
  */
 
 @Entity

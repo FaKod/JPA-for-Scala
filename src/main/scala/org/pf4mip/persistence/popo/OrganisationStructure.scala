@@ -5,9 +5,9 @@ import javax.persistence._
 import reflect.BeanProperty
 
 /**
- * User: FaKod
- * Date: 20.05.2010
- * Time: 15:29:53
+ * more complex association entity using Id Class for Entity Identity Fields
+ *
+ * @author Christopher Schmidt
  */
 
 @Entity
@@ -34,15 +34,18 @@ class OrganisationStructure extends MIPEntity {
 
 
 /**
- * ID Class
+ * Id Class for Entity Identity Fields
+ *
+ * @author Christopher Schmidt
  */
+
 class OrganisationStructureId {
   @BeanProperty
   var orgStructRootOrg: BigInteger = _
   @BeanProperty
   var ix: BigInteger = _
 
-  override def equals(obj: Any): Boolean = { //TODO change this awesome method
+  override def equals(obj: Any): Boolean = { //TODO change this awesome code
     val o = obj.asInstanceOf[AnyRef]
     //if (this == o) return true
     if (o == null || getClass() != o.getClass) return false

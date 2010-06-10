@@ -4,9 +4,10 @@ import javax.persistence.PrePersist
 import java.math.BigInteger
 
 /**
- * User: FaKod
- * Date: 20.05.2010
- * Time: 10:26:06
+ * Specifies the callback listener classes to be used for an entity or mapped superclass.
+ * resets both common values
+ *
+ * @author Christopher Schmidt
  */
 
 class MIPEntityInterceptor {

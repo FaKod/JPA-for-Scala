@@ -6,9 +6,11 @@ import reflect.BeanProperty
 import java.lang.Long
 
 /**
- * User: FaKod
- * Date: 20.05.2010
- * Time: 10:28:35
+ * class whose mapping information is applied to the entities that inherit from it.
+ * This means all popo classes. Added entity listener as a pre persist interceptor
+ * to reset both values.
+ *
+ * @author Christopher Schmidt
  */
 
 @MappedSuperclass

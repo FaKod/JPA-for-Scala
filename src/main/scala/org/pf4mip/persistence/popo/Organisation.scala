@@ -9,9 +9,11 @@ import reflect.BeanProperty
  * Time: 15:15:24
  */
 
-@Entity@Table(name = "org")
+@Entity
+@Table(name = "org")
 @PrimaryKeyJoinColumn(name = "org_id")
 class Organisation extends ObjectItem {
+  
   @Column(name = "cat_code", length = 6, nullable = false)
   @BeanProperty
   var orgCatCode: String = _
