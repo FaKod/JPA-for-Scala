@@ -42,14 +42,24 @@ class OrgStructTest extends SpecificationWithJUnit with UsesEntityManager with Q
     initDBcontent.before
 
     "return 20 Organisations with query: Select org from Organisation org" in {
-      val result = withNoTrx {createQuery[Organisation]("Select org from Organisation org").getResultList}
+      val orgList = createQuery[Organisation]("Select org from Organisation org").getResultList
       withTrxAndCommit {
-        result.foreach {
+        orgList.foreach {
           org =>
             val orgStruct = new OrganisationStructure
             orgStruct.setOrgStructRootOrg(org)
             orgStruct.setNameTxt(org.getNameTxt + "_StructNameHere")
             persistAndFlush(orgStruct)
+        }
+      }
+      withNoTrx {
+        val result = createQuery[OrganisationStructure]("Select os from OrganisationStructure os").getResultList
+        result.size must_== 20
+        var i: Long = 1
+        result.foreach {
+          orgStruct =>
+            orgStruct.getOrgStructRootOrg.getNameTxt must_== ("Test:" + i)
+            i = i + 1
         }
       }
     }
