@@ -17,10 +17,10 @@ class NameFilter {
 }
 
 class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
-  def getPersistenceUnitName = "mip"
-  "A Query with Filter" should {
 
-    "create Object Items" in {
+  def getPersistenceUnitName = "mip"
+
+  def intitDBcontent = {
       withTrxAndCommit {
         createQuery("Delete from ObjectItem") executeUpdate
 
@@ -34,6 +34,8 @@ class QueryWithFilterTest extends SpecificationWithJUnit with UsesEntityManager 
         }
       }
     }
+
+  "A Query with Filter" should { intitDBcontent.before
 
     "execute a Query and apply f on results" in {
 

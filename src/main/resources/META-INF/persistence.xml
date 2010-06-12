@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
     <persistence-unit name="mip" transaction-type="RESOURCE_LOCAL">
+        <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+        <class>org.pf4mip.persistence.popo.MIPEntity</class>
         <class>org.pf4mip.persistence.popo.ObjectItem</class>
+        <class>org.pf4mip.persistence.popo.Organisation</class>
+        <class>org.pf4mip.persistence.popo.OrganisationStructure</class>
         <properties>
+
+            <!-- ECLIPSE LINK -->
+
             <!-- Default database login using Oracle for EclipseLink's internal connection pool,
                  change this to access your own database. -->
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
@@ -49,6 +56,20 @@
             <property name="eclipselink.logging.session" value="false" />
             <property name="eclipselink.logging.exceptions" value="false" />
             <property name="eclipselink.logging.timestamp" value="false" />
+
+            <!-- OPEN JPA -->
+
+            <property name="openjpa.DataCache" value="false"/>
+            <!--property name="openjpa.DynamicEnhancementAgent" value="true" /-->
+            <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
+
+            <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict"/>
+
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='refresh,deleteTableContents')"/>
+
+            <!--property name="openjpa.jdbc.MappingDefaults" value="FieldStrategies='java.util.Calendar=pf4mip.persistence.mapping.CalendarValueHandler'"/-->
+            <!--property name="openjpa.DetachState" value="fetch-groups(DetachedStateField=true, DetachedStateManager=true, AccessUnloaded=false)" /-->
+            <!--property name="openjpa.Log" value="SQL=TRACE"/-->
         </properties>
     </persistence-unit>
 </persistence>

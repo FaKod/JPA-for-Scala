@@ -14,29 +14,31 @@ import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerFa
  */
 
 class QueryTest extends SpecificationWithJUnit with UsesEntityManager with QueryHelper with SimpleEntityManagerFactory with ThreadLocalEntityManager {
+
   def getPersistenceUnitName = "mip"
-  "A Query" should {
 
-    setSequential()
+  var ids:Queue[BigInteger] = _
 
-    shareVariables()
-    var ids = new Queue[BigInteger]()
+  /**
+   * init DB Content with 20 Object Item
+   */
+  def initDBcontent = {
+    ids = new Queue[BigInteger]()
+    withTrxAndCommit {
+      createQuery("Delete from ObjectItem") executeUpdate
 
-    "create Object Items" in {
-      withTrxAndCommit {
-        createQuery("Delete from ObjectItem") executeUpdate
-
-        for (i <- 1 to 20) {
-          val item = new ObjectItem()
-          item.setNameTxt("Test:" + i)
-          item.setObjItemCatCode("NKN")
-          item.setUpdateSeqNr(i)
-          item.setCreatorId(BigInteger.valueOf(i))
-          persist(item)
-          ids.enqueue(item.getId)
-        }
+      for (i <- 1 to 20) {
+        val item = new ObjectItem()
+        item.setNameTxt("Test:" + i)
+        item.setObjItemCatCode("NKN")
+        item.setUpdateSeqNr(i)
+        item.setCreatorId(BigInteger.valueOf(i))
+        persistAndFlush(item)
+        ids.enqueue(item.getId)
       }
     }
+  }
+  "A Query" should { initDBcontent.before
 
     "find an entity" in {
       ids.foreach {
@@ -57,6 +59,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a one/first-only-result native query" in {
+      initDBcontent
       var i: Long = 0
       oneResultQueryAndApply {
         count: Long =>
@@ -66,6 +69,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a one/first-only-result QueryId query" in {
+      initDBcontent
       var i = 0
       oneResultQueryAndApply {
         oi: ObjectItem =>
@@ -75,6 +79,7 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
     }
 
     "execute a Query and apply f on results" in {
+      initDBcontent
       var i = 0
       forQueryResults {
         oi: ObjectItem =>
