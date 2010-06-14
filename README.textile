@@ -1,18 +1,41 @@
-h1. The Idea
+h1. JPAExtension
 
-See this "JPA-for-Scala-Post":http://blog.fakod.eu/?p=855 as well
-My "Blog":http://blog.fakod.eu/
-Follow me on "Twitter":http://twitter.com/fakod
-----
+h2. JPA
 
-JPAExtension (JPA For Scala) is based on 
-* "this idea":http://blog.fakod.eu/?p=557
-* "JDBCluster":http://jdbcluster.sourceforge.net and
-* "JSR 317: JavaTM Persistence 2.0":http://jcp.org/en/jsr/detail?id=317 (JPA 2.0)
+"JSR 317: JavaTM Persistence 2.0":http://jcp.org/en/jsr/detail?id=317 (JPA 2.0) is s a POJO persistence API for object/relational mapping. It contains a full object/relational mapping specification supporting the use of Java language metadata annotations (and/or XML descriptors) to define the mapping between Java objects and a relational database.
+
+The definition of persistent entities, relations, interceptors etc. is annotation based (if you do not use the XML descriptors). Only dependent from the standard package "javax.persistence":http://java.sun.com/javaee/5/docs/api/javax/persistence/package-summary.html . This allows to choose different JPA implementations/providers like:
+
+* "OpenJPA":http://openjpa.apache.org/
+* "Hibernate":http://www.hibernate.org/
+* "EclipseLink":http://www.eclipse.org/eclipselink/
+
+All of them do provide additional rich feature enhancements like PostGIS syntax, compile time entity enhancement, plug-able extensibility etc.
+
+h2. JPAExtension
+
+JPAExtension does provide 
+* a Scala interface to the base JPA classes EntityManager, EntityMangerFactory, Query etc. to ease their usage
+* Transaction scope and query wrapper to mesh better with Scala's FP
+* more type safe interface using Scala's type system
+* externalized query and filter class definition (dedicated XML file)
+* Query parameter holder classes for type safe binding
+
+I know that the most challenging thing is to provide working Scala implementations (suitable for Java Reflection API's expectations). I will try to collect as many examples as possible for the common issues. (If you have one, contact me.)
+
+The JPAExtension is available at "Scala-Tools Maven Snapshot Repository":http://scala-tools.org/repo-snapshots/org/scala-libs/jpaextension/
+and it will be available at the Snapshot Documentation Site soon.
+
+For now please visit the short blogposts ("JPA For Scala":http://blog.fakod.eu/?p=855 , "Scala Entity and JPAExtension Examples":http://blog.fakod.eu/?p=955 ) I wrote to get an impression of JPAExtension and Scala entities.
+
+Code is at "Github":http://github.com/FaKod/JPA-for-Scala
+
+And as usual: Follow me on "Twitter":http://twitter.com/fakod
+
+h2. Planned
 
 The JPA Extension should support
-* external query strings (in a separate XML file) 
-* type safe query parameter through special Filter Classes (-> "JDBCluster:CCFilter":http://fakod.eu/wiki/index.php?title=JDBCluster#Query_Support_by_CCFilter)
+* more examples and test-cases
+* enhance Filter Classes features (-> "JDBCluster:CCFilter":http://fakod.eu/wiki/index.php?title=JDBCluster#Query_Support_by_CCFilter )
 * "Acegi":http://www.acegisecurity.org/ integration
-* Domain value check (-> "JDBCluster: Domains":http://fakod.eu/wiki/index.php?title=JDBCluster#Domains_for_Attributes) using "Bean Validation":http://www.jcp.org/en/jsr/detail?id=303
-* all this provided as Scala library
+* Domain value check (-> "JDBCluster: Domains":http://fakod.eu/wiki/index.php?title=JDBCluster#Domains_for_Attributes) using "Bean Validation":http://www.jcp.org/en/jsr/detail?id=303 )
