@@ -32,11 +32,16 @@ object CollectionUtil {
   type SC[T] = cm.Buffer[T]
 
   /**
+   * type of the used Java Collection if :+ in not used
+   */
+  type JC[T] = ju.List[T]
+
+  /**
    * create new instance of the Java Collection
    * List will be implicitly converted to Buffer by JavaConversion
    * and vice versa
    */
-  def :+[T]: ju.List[T] = new ju.ArrayList[T]
+  def :+[T]: JC[T] = new ju.ArrayList[T]
 
   /**
    * just to limit the implicit conversions and the
