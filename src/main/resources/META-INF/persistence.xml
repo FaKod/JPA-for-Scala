@@ -6,6 +6,7 @@
         <class>org.pf4mip.persistence.popo.ObjectItem</class>
         <class>org.pf4mip.persistence.popo.Organisation</class>
         <class>org.pf4mip.persistence.popo.OrganisationStructure</class>
+        <class>org.pf4mip.persistence.popo.OrganisationAssociation</class>
         <properties>
 
             <!-- ECLIPSE LINK -->
