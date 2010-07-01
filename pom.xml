@@ -14,6 +14,8 @@
 
     <name>Scala Persistence Extension Core</name>
 
+    <url>http://scala-tools.org/mvnsites/JPAExtension</url>
+
     <distributionManagement>
         <repository>
             <id>scala-tools.org</id>
@@ -115,6 +117,7 @@
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
+                <version>2.14-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
@@ -176,6 +179,26 @@
         <testSourceDirectory>src/test/scala</testSourceDirectory>
     </build>
 
+    <reporting>
+        
+        <plugins>
+
+            <plugin>
+                
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.14-SNAPSHOT</version>
+                <configuration>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                    
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <repositories>
         <repository>
             <id>scala-tools.releases</id>
@@ -185,7 +208,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        
+
         <repository>
             <id>scala-tools.snapshots</id>
             <name>Scala-Tools Dependencies Repository for Snapshots</name>
@@ -194,7 +217,7 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-        
+
         <repository>
             <id>apache-snapshots</id>
             <url>http://people.apache.org/repo/m2-snapshot-repository</url>
