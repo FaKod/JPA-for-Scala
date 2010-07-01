@@ -26,7 +26,7 @@ I know that the most challenging thing is to provide working Scala implementatio
 The JPAExtension is available at "Scala-Tools Maven Snapshot Repository":http://scala-tools.org/repo-snapshots/org/scala-libs/jpaextension/
 and it will be available at the Snapshot Documentation Site soon.
 
-For now please visit the short blogposts ("JPA For Scala":http://blog.fakod.eu/?p=855 , "Scala Entity and JPAExtension Examples":http://blog.fakod.eu/?p=955 ) I wrote to get an impression of JPAExtension and Scala entities.
+For now please visit the short blogposts ("blog.fakod.eu/tag/jpa/":http://blog.fakod.eu/tag/jpa/ ) I wrote to get an impression of JPAExtension and Scala entities.
 
 And as usual: Follow me on "Twitter":http://twitter.com/fakod
 
