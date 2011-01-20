@@ -21,6 +21,7 @@ import FilterFactory._
 import java.util.regex.Pattern
 import org.jpaextension.ReflectionUtil
 import reflect.{ClassManifest}
+import collection.mutable.Buffer
 
 /**
  * query helper to ease handling of queries through the use of
@@ -54,15 +55,15 @@ trait QueryHelper {
    * @param ( ( T ) =>A) function to be applied
    * @return A return value of the applied function
    */
-  protected def oneResultQueryAndApply[A, T: ClassManifest](body: (T) => A): DoWithQuery[A, T] =
-    new DoWithQuery[A, T](body)
+  protected def oneResultQueryAndApply[A, T: ClassManifest](body: (T) => A): DoWithOneResultQuery[A, T] =
+    new DoWithOneResultQuery[A, T](body)
 
   /**
    * creates a simple query without closure
    * @return A return value of the applied function
    */
-  protected def oneResultQuery[A, T: ClassManifest]: DoWithQuery[A, T] =
-    new DoWithQuery[A, T]({x: T => x.asInstanceOf[A]})
+  protected def oneResultQuery[A, T: ClassManifest]: DoWithOneResultQuery[A, T] =
+    new DoWithOneResultQuery[A, T]({x: T => x.asInstanceOf[A]})
 
   /**
    * executes query and applies body() to each element
@@ -72,6 +73,11 @@ trait QueryHelper {
   protected def forQueryResults[T: ClassManifest](body: (T) => Unit): DoWithForQuery[T] =
     new DoWithForQuery[T](body)
 
+  /**
+   * executes query and returns a Buffer[T] containing the results
+   * @return Buffer[T]
+   */
+  protected def queryResults[T: ClassManifest]: DoWithQuery[T] = new DoWithQuery[T]
 
   /**
    * see DoWithQueryBase Class 
@@ -106,7 +112,7 @@ trait QueryHelper {
   /**
    * class for one result queries
    */
-  protected class DoWithQuery[A, T: ClassManifest](body: (T) => A) extends DoWithQueryBase {
+  protected class DoWithOneResultQuery[A, T: ClassManifest](body: (T) => A) extends DoWithQueryBase {
 
     /**
      * doing Query
@@ -257,6 +263,59 @@ trait QueryHelper {
       res.foreach {
         x => body(x)
       }
+    }
+  }
+
+  /**
+   * return a Query result list
+   */
+  protected class DoWithQuery[T: ClassManifest] extends DoWithQueryBase {
+
+    /**
+     *  doing Query
+     * @param query JPQL query text
+     * @param param list of query parameter (nu
+     */
+    def withQuery(query: String, param: AnyRef*): Buffer[T] = {
+      val q = fillParam[T](createQuery[T](query), param: _*)
+      q.getResultList
+    }
+
+    /**
+     * doing Query
+     * @param query JPQL query text
+     * @param param MAP of query parameter
+     */
+    def withQuery(query: String, param: Map[String, AnyRef]): Buffer[T] = {
+      val q = fillParam[T](createQuery[T](query), param)
+      q.getResultList
+    }
+
+    /**
+     * doing Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param list of query parameter
+     */
+    def withQuery(query: QueryId, param: AnyRef*): Buffer[T] =
+      withQuery(getJPQL(query), param: _*)
+
+    /**
+     * doing Query from JPAExtensions QueryId
+     * @param query Query ID (from JPAExtension.xml)
+     * @param param Map of query parameter
+     */
+    def withQuery(query: QueryId, param: Map[String, AnyRef]): Buffer[T] = {
+      val q = fillParam[T](createQuery[T](getJPQL(query)), param)
+      q.getResultList
+    }
+
+    /**
+     * doing Query from Filter Object
+     * @param filter instance of filter object
+     */
+    def withQuery(filter: AnyRef): Buffer[T] = {
+      val q = createFilterQuery[T](filter)
+      q.getResultList
     }
   }
 

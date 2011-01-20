@@ -4,8 +4,8 @@ import org.specs.SpecificationWithJUnit
 import org.pf4mip.persistence.popo.ObjectItem
 import java.math.BigInteger
 import org.jpaextension.filter.QueryId
-import collection.mutable.Queue
 import org.jpaextension.manager.{ThreadLocalEntityManager, SimpleEntityManagerFactory, QueryHelper, UsesEntityManager}
+import collection.mutable.{Buffer, Queue}
 
 /**
  * User: FaKod
@@ -96,6 +96,12 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
           i = i + 1
       } withQuery (QueryId("FindObjectItemFromName"), "%Test%")
       i must_== 20
+    }
+
+    "execute a Query and return Buffer results" in {
+      initDBcontent
+      val oiBuffer = queryResults[ObjectItem] withQuery(QueryId("FindObjectItemFromName"), "%Test%")
+      oiBuffer.size must_== 20
     }
   }
 }
