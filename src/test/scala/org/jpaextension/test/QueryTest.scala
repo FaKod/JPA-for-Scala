@@ -78,6 +78,16 @@ class QueryTest extends SpecificationWithJUnit with UsesEntityManager with Query
       i must_== 1
     }
 
+    "execute a one/first-only-result String query" in {
+      initDBcontent
+      var i = 0
+      oneResultQueryAndApply {
+        oi: ObjectItem =>
+          i = i + 1
+      } withQuery ("select oi from ObjectItem oi where oi.nameTxt like ?1", "Test:10")
+      i must_== 1
+    }
+
     "execute a Query and apply f on results" in {
       initDBcontent
       var i = 0
