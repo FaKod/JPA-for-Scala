@@ -30,6 +30,18 @@ For now please visit the short blogposts ("blog.fakod.eu/tag/jpa/":http://blog.f
 
 And as usual: Follow me on "Twitter":http://twitter.com/fakod
 
+h3. Maven
+
+To use JPAExtension simple put the following dependency in your pom.xml
+
+@</dependencies>
+  <dependency>
+    <groupId>org.scala-libs</groupId>
+    <artifactId>jpaextension</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+  </dependency>
+</dependencies>@
+
 h2. Planned
 
 The JPA Extension should support
