@@ -34,13 +34,15 @@ h3. Maven
 
 To use JPAExtension simple put the following dependency in your pom.xml
 
-@</dependencies>
-  <dependency>
-    <groupId>org.scala-libs</groupId>
-    <artifactId>jpaextension</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
-  </dependency>
-</dependencies>@
+<pre>
+	</dependencies>
+	  <dependency>
+	    <groupId>org.scala-libs</groupId>
+	    <artifactId>jpaextension</artifactId>
+	    <version>0.0.2-SNAPSHOT</version>
+	  </dependency>
+	</dependencies>
+</pre>
 
 h2. Planned
 
